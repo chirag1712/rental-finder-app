@@ -2,6 +2,9 @@ const express = require('express');
 
 const app = express();
 
+//body parser
+app.use(express.json( { extended: false } ));
+
 // simple route
 app.get("/", (_, res) => {
     res.json({ message: "Hello, welcome to our CS348 project." });
