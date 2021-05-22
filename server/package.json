@@ -1,0 +1,29 @@
+{
+  "name": "cs-348-project",
+  "version": "1.0.0",
+  "description": "a web app to find sublets for university students",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "sever": "nodemon server",
+    "client": "npm start --prefix ../client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chirag1712/cs348-project.git"
+  },
+  "author": "uday chirag anne parmeet rain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chirag1712/cs348-project/issues"
+  },
+  "homepage": "https://github.com/chirag1712/cs348-project#readme",
+  "dependencies": {
+    "concurrently": "^6.1.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7"
+  }
+}
