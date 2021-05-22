@@ -7,7 +7,7 @@ const Student = function(student) {
 };
 
 Student.create = (newStudent, result) => {
-  sql.query("INSERT INTO students SET ?", newStudent, (err, res) => {
+  sql.query("INSERT INTO student SET ?", newStudent, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -20,7 +20,7 @@ Student.create = (newStudent, result) => {
 };
 
 Student.getAll = result => {
-  sql.query("SELECT * FROM students", (err, res) => {
+  sql.query("SELECT * FROM student", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -33,7 +33,7 @@ Student.getAll = result => {
 };
 
 Student.remove = (id, result) => {
-  sql.query("DELETE FROM students WHERE id = ?", id, (err, res) => {
+  sql.query("DELETE FROM student WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -52,7 +52,7 @@ Student.remove = (id, result) => {
 };
 
 Student.removeAll = result => {
-  sql.query("DELETE FROM students", (err, res) => {
+  sql.query("DELETE FROM student", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
