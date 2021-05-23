@@ -4,20 +4,20 @@ import axios from 'axios';
 
 function App() {
   const [studentInfo, setStudentInfo] = useState({
-    studentEmail: '', studentName: ''
+    email: '', name: ''
   });
 
   const [studentList, setStudentList] = useState([]);
 
-  // useEffect(() => {
-  //   const func = async () => {
-  //     const res = await axios.get('/students');
-  //     //needs to be checked once DB is setup
-  //     setStudentList([...res.data]);
-  //   }
+  useEffect(() => {
+    const func = async () => {
+      const res = await axios.get('/students');
+      //needs to be checked once DB is setup
+      setStudentList([...res.data]);
+    }
 
-  //   func()
-  // }, []);
+    func()
+  }, []);
 
   const onChange = (e) => setStudentInfo({...studentInfo, [e.target.name]: e.target.value});
 
@@ -25,11 +25,11 @@ function App() {
 
     const info = {...studentInfo};
 
-    // try {
-    //   const res = await axios.post('/students', info);
-    // } catch(err) {
-    //   console.log(err.response.data);
-    // }
+    try {
+      const res = await axios.post('/students', info);
+    } catch(err) {
+      console.log(err.response.data);
+    }
     setStudentList([...studentList, info]);
   };
 
@@ -39,23 +39,23 @@ function App() {
       <input 
         className='input'
         type='text'
-        name='studentEmail'
+        name='email'
         placeholder='Student Email'
-        value={studentInfo.studentEmail}
+        value={studentInfo.email}
         onChange={e => onChange(e)}/>
       <input 
         className='input'
         type='text'
-        name='studentName'
+        name='name'
         placeholder='Full Name'
-        value={studentInfo.studentName}
+        value={studentInfo.name}
         onChange={e => onChange(e)}/>
       <button className="btn" onClick={onSubmit} >Submit</button>
       <br/>
       <br/>
       <ul>
       {
-        studentList.map(student => <li>{student.studentName}</li>)
+        studentList.map(student => <li>{student.name}</li>)
       }
       </ul>
     </div>
