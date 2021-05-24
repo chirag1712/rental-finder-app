@@ -13,7 +13,7 @@
 /client/build
 
 # misc
-.env
+/server/.env
 /client/.DS_Store
 /client/.env.local
 /client/.env.development.local
