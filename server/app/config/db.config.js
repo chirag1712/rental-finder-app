@@ -1,6 +1,6 @@
 module.exports = {
-    HOST: "cs348-proj-db.czujyyupmeja.us-east-2.rds.amazonaws.com",
-    USER: "admin",
-    PASSWORD: "cs348-proj",
-    DB: "honkForSublet"
+    HOST: process.env.DB_HOST,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DB: process.env.DB_NAME
   };
