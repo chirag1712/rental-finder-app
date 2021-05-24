@@ -30,7 +30,7 @@ function App() {
     } catch(err) {
       console.log(err.response.data);
     }
-
+    console.log(studentList);
     setStudentList([...studentList, info]);
   };
 
