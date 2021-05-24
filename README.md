@@ -1,5 +1,5 @@
 # For the sake of this demo we will be using table X to perform simple crud functionality to showcase that our platforms are working #
-TBD
+We have created a sample "student" Table with the DB hosted on AWS RDS. For now, using the current UI, we can add a student record to the DB and see all the added records.
 
 # Datasets for the App #
 As of now this is what we are planning to do for the actual datasets to be used in the app:
@@ -12,6 +12,8 @@ As of now this is what we are planning to do for the actual datasets to be used 
 To get all dependencies run the following from the root level:
 cd server && npm i 
 cd client && npm i
+
+Use the template in the sample-env file to fill in the DB credentials at your instance of the .env file
 
 And to launch run the following from the server directory:
 npm run dev
