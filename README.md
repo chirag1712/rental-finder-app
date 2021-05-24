@@ -13,7 +13,7 @@ To get all dependencies run the following from the root level:
 `cd server && npm i`
 `cd client && npm i`
 
-Use the template in the sample-env file to fill in the DB credentials at your instance of the .env file
+Use the template in the /server/.sample-env file to fill in the DB credentials at your copy of the /server/.env file
 
 And to launch run the following from the server directory:
 npm run dev
