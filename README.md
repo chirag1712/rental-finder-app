@@ -10,8 +10,8 @@ As of now this is what we are planning to do for the actual datasets to be used 
 
 # Setup instructions #
 To get all dependencies run the following from the root level:
-cd server && npm i 
-cd client && npm i
+`cd server && npm i`
+`cd client && npm i`
 
 Use the template in the sample-env file to fill in the DB credentials at your instance of the .env file
 
