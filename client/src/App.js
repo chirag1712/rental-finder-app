@@ -9,6 +9,8 @@ function App() {
 
   const [studentList, setStudentList] = useState([]);
 
+  const [error, setError] = useState('');
+
   useEffect(() => {
     const func = async () => {
       const res = await axios.get('/students');
@@ -24,6 +26,18 @@ function App() {
   const onSubmit = async () => {
 
     const info = {...studentInfo};
+
+    if(info.name === '' || info.email === '') {
+      setError('Please enter all the fields');
+      return;
+    }
+
+    const regexLaurier = /^[\w.+\-]+@mylaurier\.ca$/;
+    const regexWaterloo = /^[\w.+\-]+@uwaterloo\.ca$/;
+    if (!regexLaurier.test(info.email) && !regexWaterloo.test(info.email)) {
+      setError('Please enter your valid university email');
+      return;
+    }
 
     try {
       const res = await axios.post('/students', info);
@@ -52,6 +66,8 @@ function App() {
         value={studentInfo.name}
         onChange={e => onChange(e)}/>
       <button className="btn" onClick={onSubmit} >Submit</button>
+      <br/>
+      {(error!=='') && <span>{error}</span>}
       <br/>
       <br/>
       <ul>
