@@ -1,3 +1,5 @@
+USE honkForSublet;
+
 CREATE TABLE User(
     user_id INTEGER NOT NULL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
