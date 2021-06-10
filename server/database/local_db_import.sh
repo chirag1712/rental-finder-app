@@ -5,6 +5,6 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-./local_db_delete.sh
+./mysql_local.sh < migrations/drop_db.sql
 ./mysql_local.sh < migrations/create_db.sql
 ./mysql_local.sh honkForSublet < "$1"
