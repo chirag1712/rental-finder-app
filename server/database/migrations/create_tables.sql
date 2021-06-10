@@ -37,7 +37,7 @@ CREATE TABLE Address(
     city VARCHAR(20) NOT NULL,
     street_name VARCHAR(20) NOT NULL,
     street_num SMALLINT NOT NULL,
-    postal_code CHAR(6),
+    postal_code CHAR(6) NOT NULL UNIQUE,
     building_name VARCHAR(20)
 );
 
