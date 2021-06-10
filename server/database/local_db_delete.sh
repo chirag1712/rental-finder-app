@@ -1,7 +1,3 @@
 #!/bin/bash
-mysql='/usr/local/mysql/bin/mysql'
-MYSQL_HOST='localhost'
-MYSQL_ROOT='root'
-MYSQL_PASS='admin123'
-$mysql -h $MYSQL_HOST -u $MYSQL_ROOT -p$MYSQL_PASS < migrations/drop_tables.sql
-$mysql -h $MYSQL_HOST -u $MYSQL_ROOT -p$MYSQL_PASS < migrations/drop_db.sql
+./mysql_local.sh < migrations/drop_tables.sql
+./mysql_local.sh < migrations/drop_db.sql
