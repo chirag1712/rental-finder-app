@@ -43,5 +43,6 @@ CREATE TABLE Address(
 
 CREATE TABLE AddressOf(
     posting_id INTEGER NOT NULL REFERENCES Posting(posting_id),
-    address_id INTEGER NOT NULL REFERENCES Address(address_id)
+    address_id INTEGER NOT NULL REFERENCES Address(address_id),
+    PRIMARY KEY(posting_id, address_id)
 );
