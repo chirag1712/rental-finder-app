@@ -3,7 +3,7 @@ USE honkForSublet;
 CREATE TABLE User(
     user_id INTEGER NOT NULL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password CHAR(64), -- SHA-256
+    password CHAR(64) NOT NULL, -- SHA-256
     first_name VARCHAR(20),
     last_name VARCHAR(20),
     phone_num VARCHAR(20),
@@ -16,8 +16,8 @@ CREATE TABLE Posting(
     term SET('fall', 'winter', 'spring'),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    pop DECIMAL(6, 2),
-    price_per_month DECIMAL(6, 2) NOT NULL,
+    pop INTEGER,
+    price_per_month SMALLINT NOT NULL,
     gender_details ENUM('male', 'female', 'co-ed'),
     rooms_available TINYINT,
     total_rooms TINYINT,
