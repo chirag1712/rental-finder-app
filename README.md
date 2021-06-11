@@ -13,7 +13,7 @@ As of now this is what we are planning to do for the actual datasets to be used 
 # Getting Started #
 1. Use `server/.sample-env` file as a template to create your own `server/.env` file
 
-2. Set up your local database in 2 ways:
+2. `cd server` and set up your local database in 2 ways:
   - Sync with production database in RDS **(WILL OVERWRITE DATA)**
     1. Set database credentials in `server/.env` to point to RDS instance
     2. `npm run db_dump <file_path>` to get database dump (recommend file name ends in `dump.sql` so that it can be gitignored)
