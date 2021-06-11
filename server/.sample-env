@@ -2,3 +2,5 @@ DB_HOST=
 DB_USER=
 DB_PASSWORD=
 DB_NAME=
+MYSQL_PATH=/usr/local/mysql/bin/mysql
+MYSQLDUMP_PATH=/usr/local/mysql/bin/mysqldump

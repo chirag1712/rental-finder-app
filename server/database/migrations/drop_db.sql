@@ -1,1 +1,1 @@
-DROP DATABASE honkForSublet;
+DROP DATABASE IF EXISTS honkForSublet;
