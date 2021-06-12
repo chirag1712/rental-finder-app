@@ -10,14 +10,25 @@ As of now this is what we are planning to do for the actual datasets to be used 
 3. New users and postings will populate the database by filling in details, or randomly generated details from the above sites
 4. We are still considering further datasets to create any random address to aide the testing off the app with sample data
 
-# Setup instructions #
-1. To get all dependencies run the following from the root level:
+# Getting Started #
+1. Use `server/.sample-env` file as a template to create your own `server/.env` file
+
+2. `cd server` and set up your local database in 2 ways:
+  - ## Sync with production database in RDS **(WILL OVERWRITE DATA)** ##
+    1. Set database credentials in `.env` to point to RDS instance
+    2. `npm run db_dump <file_path>` to store database dump at `<file_path>` (recommend file name ends in `dump.sql` so that it can be gitignored)
+    3. Set database credentials in `.env` to point to local instance
+    4. `npm run db_import <file_path>` to import database dump **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
+  - ## Fresh local database instance **(WILL DELETE DATA)** ##
+    1. Set database credentials in `.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
+    2. `npm run db_setup` to get a fresh database instance
+  - ## Lastly, you can execute any SQL script via `mysql -h <HOSTNAME> -u <USER> -p < <sql_file>` or `npm run db_exec <sql_file>` which refers to the DB in your `.env` ##
+
+3. Install dependencies by running the following in the project root:
 `cd server && npm i` <br>
 `cd client && npm i`
 
-2. Use the template in the /server/.sample-env file to fill in the DB credentials at your copy of the /server/.env file
-
-3. And to launch run the following from the server directory:
+4. Launch the app by running the following from the server directory:
 `npm run dev`
 
 # References #
