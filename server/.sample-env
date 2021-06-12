@@ -1,6 +1,16 @@
-DB_HOST=
-DB_USER=
-DB_PASSWORD=
+# set to either "dev" or "prod"
+NODE_ENV=
+
+# RDS
+RDS_DB_HOST=
+RDS_DB_USER=
+RDS_DB_PASSWORD=
+
+# LOCAL
+LOCAL_DB_HOST=
+LOCAL_DB_USER=
+LOCAL_DB_PASSWORD=
+
 DB_NAME=
 MYSQL_PATH=/usr/local/mysql/bin/mysql
 MYSQLDUMP_PATH=/usr/local/mysql/bin/mysqldump

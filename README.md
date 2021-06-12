@@ -14,6 +14,8 @@ As of now this is what we are planning to do for the actual datasets to be used 
 1. Use `server/.sample-env` file as a template to create your own `server/.env` file
 
 2. `cd server` and set up your local database in 2 ways:
+  - TIP: to point to local mysql db, set `NODE_ENV` to `dev` and to point to RDS just set it to `prod`. Example:
+  `NODE_ENV=dev` or `NODE_ENV=prod` in your `server/.env`
   - ## Sync with production database in RDS **(WILL OVERWRITE DATA)** ##
     1. Set database credentials in `.env` to point to RDS instance
     2. `npm run db_dump <file_path>` to store database dump at `<file_path>` (recommend file name ends in `dump.sql` so that it can be gitignored)
