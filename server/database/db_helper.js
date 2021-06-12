@@ -1,4 +1,4 @@
-require('dotenv').config();
+const dbConfig = require('../app/config/db.config.js');
 const { createReadStream, createWriteStream } = require('fs');
 const { spawn } = require('child_process');
 
@@ -7,9 +7,9 @@ exports.exec_sql_script = (path, args=[]) => {
         const mysql = spawn(
             process.env.MYSQL_PATH,
             [
-                `--host=${process.env.DB_HOST}`,
-                `--user=${process.env.DB_USER}`,
-                `--password=${process.env.DB_PASSWORD}`,
+                `--host=${dbConfig.HOST}`,
+                `--user=${dbConfig.USER}`,
+                `--password=${dbConfig.PASSWORD}`,
                 ...args
             ]
         );
@@ -32,10 +32,10 @@ exports.dump = (path, args=[]) => {
         const mysqldump = spawn(
             process.env.MYSQLDUMP_PATH,
             [
-                `--host=${process.env.DB_HOST}`,
-                `--user=${process.env.DB_USER}`,
-                `--password=${process.env.DB_PASSWORD}`,
-                process.env.DB_NAME,
+                `--host=${dbConfig.HOST}`,
+                `--user=${dbConfig.USER}`,
+                `--password=${dbConfig.PASSWORD}`,
+                dbConfig.DB,
                 ...args
             ]
         );
