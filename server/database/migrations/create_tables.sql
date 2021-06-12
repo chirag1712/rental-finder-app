@@ -12,7 +12,7 @@ CREATE TABLE User(
 
 CREATE TABLE Posting(
     posting_id INTEGER NOT NULL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES User(user_id),
+    user_id INTEGER NOT NULL REFERENCES User(user_id) ON DELETE CASCADE,
     term SET('fall', 'winter', 'spring'),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -27,8 +27,8 @@ CREATE TABLE Posting(
 );
 
 CREATE TABLE PostingPhoto(
-    posting_photo_id INTEGER NOT NULL PRIMARY KEY,
-    posting_id INTEGER NOT NULL REFERENCES Posting(posting_id),
+    photo_id INTEGER NOT NULL PRIMARY KEY,
+    posting_id INTEGER NOT NULL REFERENCES Posting(posting_id) ON DELETE SET NULL,
     url TEXT NOT NULL
 );
 
@@ -42,7 +42,27 @@ CREATE TABLE Address(
 );
 
 CREATE TABLE AddressOf(
-    posting_id INTEGER NOT NULL REFERENCES Posting(posting_id),
-    address_id INTEGER NOT NULL REFERENCES Address(address_id),
+    posting_id INTEGER NOT NULL REFERENCES Posting(posting_id) ON DELETE CASCADE,
+    address_id INTEGER NOT NULL REFERENCES Address(address_id) ON DELETE CASCADE,
     PRIMARY KEY(posting_id, address_id)
 );
+
+CREATE ASSERTION UserPostingUpperBound
+CHECK (NOT EXISTS(
+    SELECT u.user_id
+    FROM User AS u
+    JOIN Posting AS p
+    ON u.user_id = p.user_id
+    GROUP BY u.user_id
+    HAVING COUNT(*) > 3;
+));
+
+CREATE ASSERTION PostingPhotoUpperBound
+CHECK (NOT EXISTS(
+    SELECT p.posting_id
+    FROM Posting AS p
+    JOIN PostingPhoto AS ph
+    ON p.posting_id = ph.posting_id
+    GROUP BY p.posting_id
+    HAVING COUNT(*) > 10;
+));
