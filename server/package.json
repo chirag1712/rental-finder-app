@@ -7,6 +7,7 @@
     "db_setup": "node database/db_setup.js",
     "db_dump": "node database/db_dump.js",
     "db_import": "node database/db_import.js",
+    "db_exec": "node database/db_exec.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config server",
     "server": "nodemon -r dotenv/config server",

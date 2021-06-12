@@ -14,14 +14,15 @@ As of now this is what we are planning to do for the actual datasets to be used 
 1. Use `server/.sample-env` file as a template to create your own `server/.env` file
 
 2. `cd server` and set up your local database in 2 ways:
-  - Sync with production database in RDS **(WILL OVERWRITE DATA)**
-    1. Set database credentials in `server/.env` to point to RDS instance
-    2. `npm run db_dump <file_path>` to get database dump (recommend file name ends in `dump.sql` so that it can be gitignored)
-    3. Set database credentials in `server/.env` to point to local instance
+  - ## Sync with production database in RDS **(WILL OVERWRITE DATA)** ##
+    1. Set database credentials in `.env` to point to RDS instance
+    2. `npm run db_dump <file_path>` to store database dump at `<file_path>` (recommend file name ends in `dump.sql` so that it can be gitignored)
+    3. Set database credentials in `.env` to point to local instance
     4. `npm run db_import <file_path>` to import database dump **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
-  - Fresh local database instance **(WILL DELETE DATA)**
-    1. Set database credentials in `server/.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
+  - ## Fresh local database instance **(WILL DELETE DATA)** ##
+    1. Set database credentials in `.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
     2. `npm run db_setup` to get a fresh database instance
+  - ## Lastly, you can execute any SQL script via `mysql -h <HOSTNAME> -u <USER> -p < <sql_file>` or `npm run db_exec <sql_file>` which refers to the DB in your `.env` ##
 
 3. Install dependencies by running the following in the project root:
 `cd server && npm i` <br>
