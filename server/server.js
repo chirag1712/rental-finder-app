@@ -11,8 +11,11 @@ app.get("/", (_, res) => {
 });
 
 // require all routes here
+
+app.use("/api/users", require("./app/routes/user.routes.js"));
 app.use("/api/postings", require("./app/routes/posting.routes.js"));
 
 // listening for requests
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
