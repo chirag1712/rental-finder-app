@@ -25,8 +25,8 @@ const signup = async (request, response) => {
 
   try {
     // validate that user does not exist yet in the db
-    const user = await User.findOne(email);
-    if (user) {
+    const existing_user = await User.findOne(email);
+    if (existing_user) {
       return response.status(400).json({ error: "User already exists" });
     }
 
