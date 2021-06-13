@@ -1,7 +1,7 @@
 USE honkForSublet;
 
 CREATE TABLE User(
-    user_id INTEGER NOT NULL PRIMARY KEY,
+    user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(100) NOT NULL UNIQUE,
     password CHAR(64) NOT NULL, -- SHA-256
     first_name VARCHAR(20),
@@ -11,29 +11,30 @@ CREATE TABLE User(
 );
 
 CREATE TABLE Posting(
-    posting_id INTEGER NOT NULL PRIMARY KEY,
+    posting_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INTEGER NOT NULL REFERENCES User(user_id) ON DELETE CASCADE,
     term SET('fall', 'winter', 'spring'),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     pop INTEGER,
-    price_per_month SMALLINT NOT NULL,
+    price_per_month SMALLINT NOT NULL CHECK(price_per_month >= 0),
     gender_details ENUM('male', 'female', 'co-ed'),
-    rooms_available TINYINT,
-    total_rooms TINYINT,
+    rooms_available TINYINT CHECK(rooms_available >= 0),
+    total_rooms TINYINT CHECK(total_rooms >= 0),
     description TEXT,
     created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    updated_at DATETIME NOT NULL,
+    CHECK(end_date >= start_date)
 );
 
 CREATE TABLE PostingPhoto(
-    photo_id INTEGER NOT NULL PRIMARY KEY,
+    photo_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     posting_id INTEGER NOT NULL REFERENCES Posting(posting_id) ON DELETE SET NULL,
     url TEXT NOT NULL
 );
 
 CREATE TABLE Address(
-    address_id INTEGER NOT NULL PRIMARY KEY,
+    address_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     city VARCHAR(20) NOT NULL,
     street_name VARCHAR(20) NOT NULL,
     street_num SMALLINT NOT NULL,
