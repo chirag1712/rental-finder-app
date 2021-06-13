@@ -3,8 +3,7 @@ const User = require("../models/user.model.js");
 //express validator
 const { check, validationResult } = require("express-validator");
 
-
-signUpValidation = [
+const signUpValidation = [
   check("email", "Email Is Required").not().isEmpty(),
   check("password", "Password Is Required").not().isEmpty(),
   check("first_name", "First name is required").not().isEmpty(),
@@ -14,7 +13,7 @@ signUpValidation = [
 ];
 
 // signup a new User
-signup = async (request, response) => {
+const signup = async (request, response) => {
   // Validate request
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
@@ -26,8 +25,8 @@ signup = async (request, response) => {
 
   try {
     // validate that user does not exist yet in the db
-    const userExists = await User.userExists(email);
-    if(userExists) {
+    const user = await User.findOne(email);
+    if (user) {
       return response.status(400).json({ error: "User already exists" });
     }
 
@@ -52,16 +51,16 @@ signup = async (request, response) => {
     //error: "Some error occurred while checking existence of User"
     //error: "Some error occurred while signing up the User"
   }
-};
+}
 
-logInValidation = [
+const logInValidation = [
   check("email", "Email Is Required").not().isEmpty(),
   check("password", "Password Is Required").not().isEmpty(),
   check("email", "Not a valid email").isEmail()
 ];
 
 // verify login password for the user
-login = async (request, response) => {
+const login = async (request, response) => {
   // Validate request
   const errors = validationResult(request);
   if(!errors.isEmpty()) {

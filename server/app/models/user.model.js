@@ -37,17 +37,4 @@ User.findOne = email => {
   });
 }
 
-User.userExists = email => {
-  return new Promise((resolve, reject) => {
-    sql.query("SELECT count(*) FROM User WHERE email = ? GROUP BY email", email, (err, res) => {
-      if(err) {
-        console.log("error: ", err);
-        reject(err);
-      } else {
-        resolve(res != 0);
-      }
-    });
-  });
-}
-
 module.exports = User;
