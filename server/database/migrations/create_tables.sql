@@ -46,3 +46,31 @@ CREATE TABLE AddressOf(
     address_id INTEGER NOT NULL REFERENCES Address(address_id) ON DELETE CASCADE,
     PRIMARY KEY(posting_id, address_id)
 );
+
+DELIMITER //
+CREATE TRIGGER UserPostingUpperBound BEFORE INSERT ON Posting
+FOR EACH ROW
+BEGIN
+    IF
+        (SELECT COUNT(*)
+        FROM Posting AS p
+        WHERE p.user_id = NEW.user_id) >= 3
+    THEN
+        SIGNAL SQLSTATE '45000';
+    END IF;
+END;//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER PostingPhotoUpperBound BEFORE INSERT ON PostingPhoto
+FOR EACH ROW
+BEGIN
+    IF
+        (SELECT COUNT(*)
+        FROM PostingPhoto AS ph
+        WHERE ph.posting_id = NEW.posting_id) >= 10
+    THEN
+        SIGNAL SQLSTATE '45000';
+    END IF;
+END;//
+DELIMITER ;
