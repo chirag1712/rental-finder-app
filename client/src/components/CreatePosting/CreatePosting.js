@@ -43,8 +43,12 @@ class CreatePosting extends Component {
       postal_code: this.state.postal_code
     };
 
-    const response = await axios.post('api/postings/create', data)
-    console.log(response.data);
+    try {
+      const response = await axios.post('api/postings/create', data);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err.response.data);
+    }
   }
 
   render() {
