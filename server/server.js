@@ -11,7 +11,7 @@ app.get("/", (_, res) => {
 });
 
 // require all routes here
-require("./app/routes/student.routes.js")(app);
+app.use("/api/postings", require("./app/routes/posting.routes.js"));
 
 // listening for requests
 const PORT = process.env.PORT || 5000;
