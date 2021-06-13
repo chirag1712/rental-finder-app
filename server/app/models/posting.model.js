@@ -1,4 +1,3 @@
-const { create } = require("../controllers/posting.controller.js");
 const sql = require("./db.js");
 
 // constructor
@@ -47,7 +46,7 @@ Posting.userCheck = userId => {
   });
 }
 
-Posting.create = newPosting => {
+Posting.createPosting = newPosting => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
       if (err) {
@@ -79,7 +78,7 @@ Address.search = address => {
   });
 };
 
-Address.create = newAddress => {
+Address.createAddress = newAddress => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
       if (err) {
@@ -94,7 +93,7 @@ Address.create = newAddress => {
   });
 };
 
-AddressOf.create = newAddressOf => {
+AddressOf.createAddressOf = newAddressOf => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO AddressOf SET ?", newAddressOf, (err, res) => {
       if (err) {
