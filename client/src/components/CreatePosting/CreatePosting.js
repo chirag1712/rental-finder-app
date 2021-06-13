@@ -5,7 +5,7 @@ import { render } from 'react-dom';
 
 class CreatePosting extends Component {
   state = {
-    user_id: '1',
+    user_id: '6',
     term: '',
     start_date: '',
     end_date: '',
@@ -24,7 +24,7 @@ class CreatePosting extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleSubmit = event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
     const data = {
@@ -43,10 +43,8 @@ class CreatePosting extends Component {
       postal_code: this.state.postal_code
     };
 
-    axios.post('http://localhost:5000/create', { data })
-      .then(res => {
-        console.log(data);
-      })
+    const response = await axios.post('api/postings/create', data)
+    console.log(response.data);
   }
 
   render() {
@@ -73,6 +71,7 @@ class CreatePosting extends Component {
 
           <label for="term">Choose Your Term: </label>
           <select name="term" id="term" onChange={this.handleChange}>
+            <option value="" disabled selected>Select</option>
             <option value="fall">Fall</option>
             <option value="winter">Winter</option>
             <option value="spring">Spring</option>
@@ -81,13 +80,11 @@ class CreatePosting extends Component {
 
           <label for="start_date">Start Date: </label>
           <input type="date" id="start" name="start_date"
-            value="2021-09-01"
             min="2021-05-01" max="2022-08-31" onChange={this.handleChange}></input>
           <br></br>
 
           <label for="end_date">End Date: </label>
           <input type="date" id="end" name="end_date"
-            value="2021-12-31"
             min="2021-05-01" max="2022-08-31" onChange={this.handleChange}></input>
           <br></br>
 
@@ -95,21 +92,9 @@ class CreatePosting extends Component {
           <input name='price_per_month' type='text' onChange={this.handleChange} />
           <br></br>
 
-          {/* 
-        <label for="is_negotiable"> Is it Negotiable?: </label>
-        <select name="is_negotiable" id="is_negotiable">
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-        <br></br>
-
-        <label for='leasing'> Leasing Company: </label>
-        <input name='leasing' type='text' />
-        <br></br>
-        */}
-
           <label for="gender_details"> Who can live here?: </label>
-          <select name="gender_details" id="genders" onChange={this.handleChange}>
+          <select name="gender_details" id="gender_details" onChange={this.handleChange}>
+            <option value="" disabled selected>Select</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="co-ed">Co-ed</option>
@@ -124,42 +109,6 @@ class CreatePosting extends Component {
           <input name='total_rooms' type='text' onChange={this.handleChange} />
           <br></br>
 
-          {/* 
-        <label for='num_washrooms'> Number of Washrooms: </label>
-        <input name='num_washrooms' type='text' />
-        <br></br>
-
-        <label for="ac"> Air Conditioning?: </label>
-        <select name="ac" id="ac">
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-        <br></br>
-
-        <label for="wifi"> Wifi?: </label>
-        <select name="wifi" id="wifi">
-          <option value="Yes">Included</option>
-          <option value="No">Not Included</option>
-        </select>
-        <br></br>
-
-        <label for="parking"> Parking: </label>
-        <select name="parking" id="parking">
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-        <br></br>
-
-        <label for="laundry"> Laundry: </label>
-        <select name="laundry" id="laundry">
-          <option value="Ensuite">Ensuite</option>
-          <option value="On Site">On Site</option>
-          <option value="None">None</option>
-        </select>
-        <br></br>
-        <br></br>
-
-        */}
           <label for='description'> Description: </label>
           <br></br>
           <textarea rows="5" cols="60" name="description" onChange={this.handleChange}>
