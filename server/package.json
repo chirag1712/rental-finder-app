@@ -25,8 +25,10 @@
   },
   "homepage": "https://github.com/chirag1712/cs348-project#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "concurrently": "^6.1.0",
     "express": "^4.17.1",
+    "express-validator": "^6.11.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7"
   },
