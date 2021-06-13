@@ -14,7 +14,7 @@ signUpValidation = [
 ];
 
 // signup a new User
-signup = (request, response) => {
+signup = async (request, response) => {
   // Validate request
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
@@ -24,20 +24,17 @@ signup = (request, response) => {
 
   const {email, password, first_name, last_name, phone_num} = request.body;
 
-  // validate that user does not exist yet in the db
-  User.userExists(email, async (err, userExists) => {
-    if (err) {
-      return response.status(500).send({
-        error: "Some error occurred while checking existence of User"
-      });
-    } else if (userExists) {
+  try {
+    // validate that user does not exist yet in the db
+    const userExists = await User.userExists(email);
+    if(userExists) {
       return response.status(400).json({ error: "User already exists" });
     }
 
     // encrypt password
     const salt = await bcrypt.genSalt(10);
     const e_password = await bcrypt.hash(password, salt);
-    
+
     // Create a User
     const user = new User({
       email,
@@ -47,15 +44,14 @@ signup = (request, response) => {
       phone_num
     });
 
-    // Save User in the database
-    User.signup(user, (err, data) => {
-      if (err) {
-        return response.status(500).send({ 
-          error: "Some error occurred while signing up the User"
-        });
-      } else response.send({ id: data.user_id });
-    });
-  });
+    const user_id = await User.signup(user);
+    response.send({ id: user_id });
+
+  } catch(err) {
+    response.status(500).send({ error: "Internal Error while sign up" });
+    //error: "Some error occurred while checking existence of User"
+    //error: "Some error occurred while signing up the User"
+  }
 };
 
 logInValidation = [
@@ -65,36 +61,34 @@ logInValidation = [
 ];
 
 // verify login password for the user
-login = (request, response) => {
+login = async (request, response) => {
   // Validate request
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
-      let errorArray = errors.array().map(e => e.msg);
-      return response.status(400).json({ error: errorArray[0] });
+    let errorArray = errors.array().map(e => e.msg);
+    return response.status(400).json({ error: errorArray[0] });
   }
 
   const {email, password} = request.body;
-  // validate that user should exist in the database
-  User.findOne(email, (err, user) => {
-    if (err) {
-      return response.status(500).send({
-        error: "Some error occurred while logging in the User"
-      });
+
+  try {
+    // validate that user should exist in the database
+    const user = await User.findOne(email);
+    if (!user) {
+      return response.status(401).json({ error: "User does not exist" });
     }
 
-    if (user[0]) {
-      // check user password with hashed password stored in the database
-      bcrypt.compare(password, user[0].password, (err, res) => {
-        if (res) {
-          response.status(200).json({ id: user[0].user_id });  
-        } else {
-          response.status(401).json({ error: "Invalid Password" });  
-        }
-      });
+    // check user password with hashed password stored in the database
+    const match = await bcrypt.compare(password, user.password);
+    if(match) {
+      response.status(200).json({ id: user.user_id });  
     } else {
-      response.status(401).json({ error: "User does not exist" });
+      response.status(401).json({ error: "Invalid Password" });  
     }
-  });
+
+  } catch(err) {
+    response.status(500).send({ error: "Internal Error while log in" });
+  }
 }
 
 module.exports = {
