@@ -23,6 +23,18 @@ const CreatePosting = (props) => {
         </select>
         <br></br>
 
+        <label for="start">Start Date: </label>
+        <input type="date" id="start" name="start-date"
+          value="2021-09-01"
+          min="2021-05-01" max="2022-08-31"></input>
+        <br></br>
+
+        <label for="start">End Date: </label>
+        <input type="date" id="end" name="end-start"
+          value="2021-12-31"
+          min="2021-05-01" max="2022-08-31"></input>
+        <br></br>
+
         <label for='price'> Price Per Month: </label>
         <input name='price' type='text' />
         <br></br>
@@ -46,29 +58,16 @@ const CreatePosting = (props) => {
         </select>
         <br></br>
 
-        <label for="number_rooms_total"> Number of Rooms Total: </label>
-        <select name="number_rooms_total" id="number_rooms_total">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
+        <label for='number_rooms_total'> Number of Rooms Total: </label>
+        <input name='number_rooms_total' type='text' />
         <br></br>
 
-        {/* add some kind of listener here so its less than number rooms total */}
-        <label for="number_rooms_open"> Number of Rooms Available: </label>
-        <select name="number_rooms_open" id="number_rooms_open">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
+        <label for='number_rooms_open'> Number of Rooms Available: </label>
+        <input name='number_rooms_open' type='text' />
+        <br></br>
+
+        <label for='num_washrooms'> Number of Washrooms: </label>
+        <input name='num_washrooms' type='text' />
         <br></br>
 
         <label for="ac"> Air Conditioning?: </label>
@@ -99,29 +98,16 @@ const CreatePosting = (props) => {
           <option value="None">None</option>
         </select>
         <br></br>
-
-         {/* add some kind of listener here so its less than number rooms total */}
-        <label for="num_washrooms"> Number of Washrooms: </label>
-        <select name="num_washrooms" id="num_washrooms">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-        <br></br>
         <br></br>
 
         <label for='description'> Description: </label>
         <br></br>
-        <textarea rows = "5" cols = "60" name = "description">
-            Enter More Details Here...
+        <textarea rows="5" cols="60" name="description">
+          Enter More Details Here...
         </textarea>
         <br></br>
         <br></br>
-        <input type = "submit" value = "submit" />
+        <input type="submit" value="submit" />
       </form>
     </Wrapper>
   );
