@@ -1,3 +1,4 @@
+const { create } = require("../controllers/posting.controller.js");
 const sql = require("./db.js");
 
 // constructor
@@ -32,94 +33,79 @@ const AddressOf = function (addressof) {
 };
 
 //check if user_id exists in database
-Posting.userCheck = (user_id, result) => {
-  sql.query(
-    "SELECT * FROM User WHERE user_id = ?",
-    user_id,
-    (err, res) => {
+Posting.userCheck = userId => {
+  return new Promise((resolve, reject) => {
+    sql.query(
+      "SELECT * FROM User WHERE user_id = ?", userId, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          reject(err);
+        } else {
+          resolve(res[0]);
+        }
+      });
+  });
+}
+
+Posting.create = newPosting => {
+  return new Promise((resolve, reject) => {
+    sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-      if (res[0]) {
-        result(null, true);
-        console.log("User exists");
-        return;
+        reject(err)
       } else {
-        console.log("User doesnt exists");
-        result(null, false);
-        return;
+        const createdPosting = { posting_id: res.insertId, ...newPosting }
+        console.log("created posting: ", createdPosting);
+        resolve(createdPosting);
       }
-    }
-  );
-};
-
-Posting.create = (newPosting, result) => {
-  sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    console.log("created posting: ", {
-      posting_id: res.insertId,
-      ...newPosting,
     });
-    result(null, { posting_id: res.insertId, ...newPosting });
   });
 };
 
-Address.createAddress = (newAddress, result) => {
-  sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
-    if (err) {
-      console.log(newAddress)
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    console.log("created address: ", {
-      address_id: res.insertId,
-      ...newAddress,
-    });
-    result(null, { address_id: res.insertId, ...newAddress });
-  });
-};
-
-AddressOf.createAddressOf = (newAddressOf, result) => {
-  sql.query("INSERT INTO AddressOf SET ?", newAddressOf, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    console.log("created new addressof translation: ", {
-      ...newAddressOf,
-    });
-    result(null, true);
-  });
-};
-
-Address.search = (address, result) => {
-  sql.query(
-    "SELECT * FROM Address WHERE street_num = " +
-      address.street_num +
-      " AND street_name = \"" +
-      address.street_name + "\"",
-    (err, res) => {
+// TODO(chirag): look into comibining search and create address endoints into one
+Address.search = address => {
+  return new Promise((resolve, reject) => {
+    var query = "SELECT * FROM Address WHERE street_num = ? AND postal_code = ?";
+    sql.query(query, [address.street_num, address.postal_code], (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
-        return;
+        reject(err);
+      } else {
+        console.log("address from db: ", res);
+        resolve(res);
+      }
+    }
+    );
+  });
+};
+
+Address.create = newAddress => {
+  return new Promise((resolve, reject) => {
+    sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err);
+      } else {
+        const createdAddress = { address_id: res.insertId, ...newAddress };
+        console.log("created address: ", createdAddress);
+        resolve(createdAddress);
+      }
+    });
+  });
+};
+
+AddressOf.create = newAddressOf => {
+  return new Promise((resolve, reject) => {
+    sql.query("INSERT INTO AddressOf SET ?", newAddressOf, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err);
       }
 
-      console.log("address found: ", res);
-      result(null, res);
-    }
-  );
+      console.log("created new addressof translation: ", newAddressOf);
+      resolve(newAddressOf)
+    });
+  });
 };
 
 module.exports = {
