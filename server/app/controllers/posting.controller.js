@@ -1,7 +1,5 @@
 //const User = require("../models/user.model.js");
-const Posting = require("../models/posting.model.js");
-const Address = require("../models/posting.model.js");
-const AddressOf = require("../models/posting.model.js");
+const {Posting, Address, AddressOf} = require("../models/posting.model.js");
 
 // Create a new posting
 exports.create = async (request, result) => {
@@ -49,69 +47,70 @@ exports.create = async (request, result) => {
       result.status(400).json({ error: "User doesn't exist." });
       return;
     }
-  });
-
-  // Save Posting in the database
-  Posting.createPosting(Posting, (err, posting) => {
-    if (err) {
-      return result.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the posting.",
-      });
-    }
-
-    // Search Address in the database
-    Address.search(Address, (err, address) => {
+    // Save Posting in the database
+    Posting.create(posting, (err, posting) => {
       if (err) {
         return result.status(500).send({
           message:
-            err.message || "Some error occurred while searching the address.",
+            err.message || "Some error occurred while creating the posting.",
         });
       }
 
-      const address_of = new AddressOf({
-        posting_id: posting.posting_id,
-        address_id: address.address_id,
+      // Search Address in the database
+      Address.search(address, (err, address) => {
+        if (err) {
+          return result.status(500).send({
+            message:
+              err.message || "Some error occurred while searching the address.",
+          });
+        }
+
+        if (address[0]) {
+          // address exists
+          const address_of = new AddressOf({
+            posting_id: posting.posting_id,
+            address_id: address.address_id,
+          });
+
+          //join address and posting
+          AddressOf.createAddressOf(address_of, (err, address) => {
+            if (err)
+              result.status(500).send({
+                message:
+                  err.message ||
+                  "Some error occurred while joining the address and posting.",
+              });
+          });
+        } else {
+          // Save Address in the database
+          Address.createAddress(address, (err, address) => {
+            if (err) {
+              result.status(500).send({
+                message:
+                  err.message || "Some error occurred while saving the address.",
+              });
+              return;
+            }
+            const address_of = new AddressOf({
+              posting_id: posting.posting_id,
+              address_id: address.address_id,
+            });
+
+            //join address and posting
+            AddressOf.createAddressOf(address_of, (err, data) => {
+              if (err)
+                result.status(500).send({
+                  message:
+                    err.message ||
+                    "Some error occurred while joining the address and posting.",
+                });
+            });
+
+          });
+        }
       });
 
-      if (address[0]) {
-        // address exists
-
-        //join address and posting
-        AddressOf.createAddressOf(address_of, (err, address) => {
-          if (err)
-            result.status(500).send({
-              message:
-                err.message ||
-                "Some error occurred while joining the address and posting.",
-            });
-          else result.send(address);
-        });
-      } else {
-        // Save Address in the database
-        Address.createAddress(address, (err, address) => {
-          if (err)
-            result.status(500).send({
-              message:
-                err.message || "Some error occurred while saving the address.",
-            });
-          else result.send(address);
-        });
-
-        //join address and posting
-
-        AddressOf.createAddressOf(address_of, (err, data) => {
-          if (err)
-            result.status(500).send({
-              message:
-                err.message ||
-                "Some error occurred while joining the address and posting.",
-            });
-          else result.send(data);
-        });
-      }
+      result.send(posting);
     });
-
-    result.send(posting);
   });
 };

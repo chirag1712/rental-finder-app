@@ -34,7 +34,7 @@ const AddressOf = function (addressof) {
 //check if user_id exists in database
 Posting.userCheck = (user_id, result) => {
   sql.query(
-    "SELECT count(*) FROM User WHERE user_id = ? GROUP BY user_id",
+    "SELECT * FROM User WHERE user_id = ?",
     user_id,
     (err, res) => {
       if (err) {
@@ -42,7 +42,7 @@ Posting.userCheck = (user_id, result) => {
         result(null, err);
         return;
       }
-      if (res == 1) {
+      if (res[0]) {
         result(null, true);
         console.log("User exists");
         return;
@@ -55,7 +55,7 @@ Posting.userCheck = (user_id, result) => {
   );
 };
 
-Posting.createPosting = (newPosting, result) => {
+Posting.create = (newPosting, result) => {
   sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -106,8 +106,8 @@ Address.search = (address, result) => {
   sql.query(
     "SELECT * FROM Address WHERE street_num = " +
       address.street_num +
-      " AND street_name = " +
-      address.street_name,
+      " AND street_name = \"" +
+      address.street_name + "\"",
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -121,4 +121,6 @@ Address.search = (address, result) => {
   );
 };
 
-module.exports = Posting;
+module.exports = {
+  Posting, Address, AddressOf
+}
