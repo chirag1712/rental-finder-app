@@ -74,6 +74,7 @@ Posting.create = (newPosting, result) => {
 Address.createAddress = (newAddress, result) => {
   sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
     if (err) {
+      console.log(newAddress)
       console.log("error: ", err);
       result(err, null);
       return;

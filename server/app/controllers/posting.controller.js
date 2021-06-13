@@ -43,6 +43,7 @@ exports.create = async (request, result) => {
           err.message ||
           "Some error occurred while checking existence of User.",
       });
+      return;
     } else if (!userExist) {
       result.status(400).json({ error: "User doesn't exist." });
       return;
@@ -57,7 +58,7 @@ exports.create = async (request, result) => {
       }
 
       // Search Address in the database
-      Address.search(address, (err, address) => {
+      Address.search(address, (err, c_address) => {
         if (err) {
           return result.status(500).send({
             message:
@@ -65,7 +66,7 @@ exports.create = async (request, result) => {
           });
         }
 
-        if (address[0]) {
+        if (c_address[0]) {
           // address exists
           const address_of = new AddressOf({
             posting_id: posting.posting_id,
@@ -73,7 +74,7 @@ exports.create = async (request, result) => {
           });
 
           //join address and posting
-          AddressOf.createAddressOf(address_of, (err, address) => {
+          AddressOf.createAddressOf(address_of, (err, data) => {
             if (err)
               result.status(500).send({
                 message:
@@ -83,7 +84,7 @@ exports.create = async (request, result) => {
           });
         } else {
           // Save Address in the database
-          Address.createAddress(address, (err, address) => {
+          Address.createAddress(address, (err, n_address) => {
             if (err) {
               result.status(500).send({
                 message:
@@ -93,7 +94,7 @@ exports.create = async (request, result) => {
             }
             const address_of = new AddressOf({
               posting_id: posting.posting_id,
-              address_id: address.address_id,
+              address_id: n_address.address_id,
             });
 
             //join address and posting
@@ -105,7 +106,6 @@ exports.create = async (request, result) => {
                     "Some error occurred while joining the address and posting.",
                 });
             });
-
           });
         }
       });
