@@ -1,19 +1,16 @@
-const users = require("../controllers/user.controller.js");
 const express = require('express');
 const router = express.Router();
 
-// create a new User
-router.post("/signup", users.signup);
+const users = require("../controllers/user.controller.js");
+
+// @route  POST api/users/login
+// @desc   signs up a user
+// @access PRIVATE
+router.post("/signup", users.signUpValidation, users.signup);
 
 // @route  POST api/users/login
 // @desc   logins a user
 // @access PRIVATE
-router.post("/login", users.loginValidation, users.login)
-
-// return all Users
-router.get("/", users.findAll);
-
-// delete a User by userId
-router.delete("/:user", users.delete);
+router.post("/login", users.logInValidation, users.login);
 
 module.exports = router;
