@@ -1,11 +1,10 @@
-//const User = require("../models/user.model.js");
-const {Posting, Address, AddressOf} = require("../models/posting.model.js");
+const { Posting, Address, AddressOf } = require("../models/posting.model.js");
 
 // Create a new posting
-exports.create = async (request, result) => {
+const create = async (request, result) => {
   // Validate request
   if (!request.body) {
-    result.status(400).send({
+    return result.status(400).send({
       message: "Content can not be empty!",
     });
   }
@@ -16,7 +15,6 @@ exports.create = async (request, result) => {
     term: request.body.term,
     start_date: request.body.start_date,
     end_date: request.body.end_date,
-    pop: 0,
     price_per_month: request.body.price_per_month,
     gender_details: request.body.gender_details,
     rooms_available: request.body.rooms_available,
@@ -35,82 +33,38 @@ exports.create = async (request, result) => {
     building_name: request.body.building_name,
   });
 
-  // validate that user exists in the db
-  Posting.userCheck(request.body.user_id, (err, userExist) => {
-    if (err) {
-      result.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while checking existence of User.",
-      });
-      return;
-    } else if (!userExist) {
-      result.status(400).json({ error: "User doesn't exist." });
-      return;
+  try {
+    // validate that user exists in the db
+    const user = await Posting.userCheck(request.body.user_id)
+    if (!user) {
+      return result.status(400).json({ error: "User doesn't exist." });
     }
+
     // Save Posting in the database
-    Posting.create(posting, (err, posting) => {
-      if (err) {
-        return result.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the posting.",
-        });
-      }
+    const newPosting = await Posting.create(posting);
 
-      // Search Address in the database
-      Address.search(address, (err, c_address) => {
-        if (err) {
-          return result.status(500).send({
-            message:
-              err.message || "Some error occurred while searching the address.",
-          });
-        }
-
-        if (c_address[0]) {
-          // address exists
-          const address_of = new AddressOf({
-            posting_id: posting.posting_id,
-            address_id: address.address_id,
-          });
-
-          //join address and posting
-          AddressOf.createAddressOf(address_of, (err, data) => {
-            if (err)
-              result.status(500).send({
-                message:
-                  err.message ||
-                  "Some error occurred while joining the address and posting.",
-              });
-          });
-        } else {
-          // Save Address in the database
-          Address.createAddress(address, (err, n_address) => {
-            if (err) {
-              result.status(500).send({
-                message:
-                  err.message || "Some error occurred while saving the address.",
-              });
-              return;
-            }
-            const address_of = new AddressOf({
-              posting_id: posting.posting_id,
-              address_id: n_address.address_id,
-            });
-
-            //join address and posting
-            AddressOf.createAddressOf(address_of, (err, data) => {
-              if (err)
-                result.status(500).send({
-                  message:
-                    err.message ||
-                    "Some error occurred while joining the address and posting.",
-                });
-            });
-          });
-        }
+    // Address handling for the new posting
+    const foundAddress = await Address.search(address);
+    if (foundAddress[0]) {
+      const addressOf = new AddressOf({
+        posting_id: newPosting.posting_id,
+        address_id: foundAddress[0].address_id,
       });
+      AddressOf.create(addressOf);
+    } else {
+      const newAddress = await Address.create(address);
+      const addressOf = new AddressOf({
+        posting_id: newPosting.posting_id,
+        address_id: newAddress.address_id,
+      });
+      AddressOf.create(addressOf);
+    }
 
-      result.send(posting);
-    });
-  });
+    result.status(200).json(posting);
+  } catch (err) {
+    console.log(err);
+    return result.status(500).send({ error: "Internal server Error" })
+  }
 };
+
+module.exports = { create }

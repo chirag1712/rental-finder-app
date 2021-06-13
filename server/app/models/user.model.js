@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const User = function(user) {
+const User = function (user) {
   this.email = user.email;
   this.first_name = user.first_name;
   this.last_name = user.last_name;
@@ -12,11 +12,11 @@ const User = function(user) {
 User.signup = newUser => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO User SET ?", newUser, (err, res) => {
-      if(err) {
+      if (err) {
         console.log("error: ", err);
         reject(err);
       } else {
-        // console.log("created user: ", { user_id: res.insertId, ...newUser });
+        console.log("created user: ", { user_id: res.insertId, ...newUser });
         resolve(res.insertId);
       }
     });
@@ -30,7 +30,7 @@ User.findOne = email => {
         console.log("error: ", err);
         reject(err);
       } else {
-        // console.log("user found: ", res);
+        console.log("user found: ", res);
         resolve(res[0]);
       }
     });

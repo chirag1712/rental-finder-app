@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 //body parser
-app.use(express.json( { extended: false } ));
+app.use(express.json({ extended: false }));
 
 // simple route
 app.get("/", (_, res) => {
@@ -11,7 +11,6 @@ app.get("/", (_, res) => {
 });
 
 // require all routes here
-
 app.use("/api/users", require("./app/routes/user.routes.js"));
 app.use("/api/postings", require("./app/routes/posting.routes.js"));
 
