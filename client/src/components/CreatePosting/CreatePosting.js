@@ -48,7 +48,7 @@ class CreatePosting extends Component {
       alert('Successfully Made a Posting!');
       console.log(response.data);
     } catch (err) {
-        alert('Error!');
+      alert('Error!');
       console.log(err.response.data);
     }
   }
