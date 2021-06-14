@@ -1,3 +1,4 @@
+const { createWriteStream } = require('fs');
 const puppeteer = require('puppeteer');
 const { Cluster } = require('puppeteer-cluster');
 const https = require('https');
@@ -5,6 +6,7 @@ const bcrypt = require('bcrypt');
 const User = require('../app/models/user.model.js');
 const { Posting, Address, AddressOf } = require('../app/models/posting.model.js');
 
+// WIP boilerplate for the future
 const fb_scraper = async () => {
   try {
     const url = 'https://www.facebook.com/marketplace/112763262068685/propertyrentals';
@@ -21,7 +23,7 @@ const fb_scraper = async () => {
       const numPostsPerScraper = 50 / concurrency;
       const scrollThreshold = 20 / concurrency;
       await page.goto(url, { timeout: 0 });
-      // console.log(`Connected to ${url}`);
+      // myConsole.log(`Connected to ${url}`);
       for (let i = 0; i < numPostsPerScraper; ++i) {
         const index = pid + concurrency * i;
         try {
@@ -40,17 +42,17 @@ const fb_scraper = async () => {
               scrollInterval = setInterval(scroll, 100, resolve);
             });
           });
-          // console.log(`Page has loaded`);
+          // myConsole.log(`Page has loaded`);
           await page.evaluate((sel, ind) => {
             const el = document.querySelectorAll(sel)[ind];
             el.click();
           }, item_selector, index);
-          // console.log(`Item clicked`);
+          // myConsole.log(`Item clicked`);
           await page.waitForSelector(price_selector);
-          // console.log(`Item page loaded`);
+          // myConsole.log(`Item page loaded`);
           const price = await page.evaluate(sel => document.querySelector(sel).innerText, price_selector);
           await page.goBack();
-          console.log({pid, i, index, price});
+          myConsole.log({pid, i, index, price});
         } catch (err) {
           console.error({pid, i, index, err});
         }
@@ -66,44 +68,38 @@ const fb_scraper = async () => {
   }
 };
 
-const bamboo_scraper = async () => {
+const bamboo_list_scraper = async ({ browser, page, data: { pid, url, selectors } }) => {
+  const logStream= createWriteStream(`database/logs/scraped_page${pid}.log`);
+  const myConsole = new console.Console(logStream, logStream);
   try {
-    const url = 'https://bamboohousing.ca/homepage';
-    const item_selector = '.ui.items>.item>.desktoplisting';
-    const start_date_selector = '.calendar~.content>.description';
-    const duration_selector = '.clock~.content>.description';
-    const price_selector = '.ui.segment>h2.ui.header';
-    const gender_selector = '.man~.content>.description';
-    const rooms_available_selector = '.hashtag~.content>.description';
-    const description_selector = '.listingdescription';
-    const created_at_selector = '.ui.segment>h4.ui.header';
-    const address_selector = 'h1.header';
-    // const browser = await puppeteer.launch({ devtools: true });
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url, { timeout: 60000 });
-    console.log(`Connected to ${url}`);
+    const {
+      item_selector, start_date_selector, duration_selector, price_selector,
+      gender_selector, rooms_available_selector, description_selector,
+      created_at_selector, address_selector
+    } = selectors;
+    await page.goto(url, { timeout: 0 });
+    myConsole.log(`Connected to ${url}`);
     await page.waitForSelector(item_selector);
-    console.log(`Page has loaded`);
+    myConsole.log(`Page has loaded`);
     //save target of original page to know that this was the opener: 
     const pageTarget = page.target();
     const listLen = await page.evaluate(
       sel => document.querySelector(sel).parentElement.parentElement.childElementCount,
       item_selector
     );
-    console.log(`Found ${listLen} items`);
+    myConsole.log(`Found ${listLen} items`);
     for (let index = 0; index < listLen; ++index) {
       await page.evaluate((sel, ind) => {
         const el = document.querySelectorAll(sel)[ind];
         el.click();
       }, item_selector, index);
-      console.log(`Item clicked`);
+      myConsole.log(`Item clicked`);
       //check that the first page opened this new page:
       const newTarget = await browser.waitForTarget(target => target.opener() === pageTarget);
       //get the new page object:
       const newPage = await newTarget.page();
       await newPage.waitForNavigation({ waitUntil: 'networkidle0' });
-      console.log(`Item page loaded`);
+      myConsole.log(`Item page loaded`);
       const data = await newPage.evaluate(
         (
           start_date_selector, duration_selector, price_selector, gender_selector,
@@ -125,9 +121,9 @@ const bamboo_scraper = async () => {
         rooms_available_selector, description_selector, created_at_selector,
         address_selector
       );
-      console.log(data);
+      myConsole.log(data);
       await newPage.close();
-      console.log(`Item page closed`);
+      myConsole.log(`Item page closed`);
 
       const newUser = await createNewUser(); // consider scraping real profiles on Bamboo (need an account)
       // TODO: user validation
@@ -136,6 +132,7 @@ const bamboo_scraper = async () => {
       const startDate = new Date(data.start_date);
       const duration = parseInt(data.duration.replace(/(^\d+)(.+$)/i, '$1'));
       const endDate = new Date(startDate.setMonth(startDate.getMonth() + duration));
+      const created_at = new Date(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]).toISOString().replace(/T/, ' ').replace(/\..+/, '');
       const posting = new Posting({
         user_id,
         term: dateToTerm(startDate, duration),
@@ -145,17 +142,19 @@ const bamboo_scraper = async () => {
         gender_details: parseGender(data.gender),
         rooms_available: parseInt(data.rooms_available),
         description: data.description,
-        created_at: new Date(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]).toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+        created_at,
+        updated_at: created_at
       });
       const newPosting = await Posting.create(posting);
       // TODO: address validation
+      const addressRegex = /((.*),\s*)?(\d+)\s+(.*),\s*(\w+(\s*\w+)*)/;
       const address = new Address({
-        street_num: parseInt(data.address.match(/\d+/)[0]),
-        street_name: data.address.match(/(?:[A-Z][a-z.-]+[ ]?)+/)[0], // copied from stackoverflow should rework validations some day
-        city: data.address.match(/\w*$/)[0],
-        postal_code: randomPostalCode(), // try to find alternative
+        street_num: parseInt(data.address.match(addressRegex)[3]),
+        street_name: data.address.match(addressRegex)[4],
+        city: data.address.match(addressRegex)[5],
+        postal_code: randomPostalCode(), // should improve this
       });
-      console.log(address);
+      myConsole.log(address);
       // Copied from controller for now
       const foundAddress = await Address.search(address);
       if (foundAddress[0]) {
@@ -174,7 +173,43 @@ const bamboo_scraper = async () => {
       }
     }
     await browser.close();
-    console.log('Browser closed');
+    myConsole.log('Browser closed');
+  } catch (err) {
+    console.error(err);
+  } finally {
+    logStream.end();
+  }
+};
+
+const bamboo_scraper = async () => {
+  try {
+    const selectors = {
+      item_selector: '.ui.items>.item>.desktoplisting',
+      start_date_selector: '.calendar~.content>.description',
+      duration_selector: '.clock~.content>.description',
+      price_selector: '.ui.segment>h2.ui.header',
+      gender_selector: '.man~.content>.description',
+      rooms_available_selector: '.hashtag~.content>.description',
+      description_selector: '.listingdescription',
+      created_at_selector: '.ui.segment>h4.ui.header',
+      address_selector: 'h1.header'
+    };
+    const cluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_BROWSER,
+      maxConcurrency: 5,
+      timeout: 90000 // ms
+    });
+    const paginationLen = 9;
+    await cluster.task(bamboo_list_scraper);
+    for (let pid = 1; pid <= paginationLen; ++pid) {
+      cluster.queue({
+        pid,
+        url: `https://bamboohousing.ca/homepage?page=${pid}&RoomsAvailable=&Coed=&StartTerm=&Ensuite=&LeaseType=&Price=`,
+        selectors
+      });
+    }
+    await cluster.idle();
+    await cluster.close();
   } catch (err) {
     console.error(err);
   }

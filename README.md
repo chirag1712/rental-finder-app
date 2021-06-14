@@ -24,6 +24,7 @@ As of now this is what we are planning to do for the actual datasets to be used 
   - ## Fresh local database instance **(WILL DELETE DATA)** ##
     1. Set database credentials in `.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
     2. `npm run db_setup` to get a fresh database instance
+    3. `npm run db_pop_sample` to populate the database with scraped sample data
   - ## Lastly, you can execute any SQL script via `mysql -h <HOSTNAME> -u <USER> -p < <sql_file>` or `npm run db_exec <sql_file>` which refers to the DB in your `.env` ##
 
 3. Install dependencies by running the following in the project root:

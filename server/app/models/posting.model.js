@@ -15,7 +15,7 @@ const Posting = function (posting) {
 
   // check how to implement these
   this.created_at = posting.created_at;
-  this.updated_at = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  this.updated_at = posting.updated_at ?? new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
 const Address = function (address) {
