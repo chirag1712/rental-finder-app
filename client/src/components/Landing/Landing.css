@@ -1,0 +1,35 @@
+.Dialog {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.Input {
+  font-size: 1.2rem;
+  color: orange;
+  background-color: transparent;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid orange;
+  padding: 0px;
+}
+
+.Btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  color: black;
+  background-color: orange;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-family: inherit;
+}

@@ -5,7 +5,6 @@ import { render } from 'react-dom';
 
 class CreatePosting extends Component {
   state = {
-    user_id: '6',
     term: '',
     start_date: '',
     end_date: '',
@@ -28,7 +27,7 @@ class CreatePosting extends Component {
     event.preventDefault();
 
     const data = {
-      user_id: this.state.user_id,
+      user_id: this.props.user_id,
       term: this.state.term,
       start_date: this.state.start_date,
       end_date: this.state.end_date,
