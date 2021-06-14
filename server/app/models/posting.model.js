@@ -46,7 +46,7 @@ Posting.userCheck = userId => {
   });
 }
 
-Posting.createPosting = newPosting => {
+Posting.create = newPosting => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
       if (err) {
@@ -78,7 +78,7 @@ Address.search = address => {
   });
 };
 
-Address.createAddress = newAddress => {
+Address.create = newAddress => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
       if (err) {
@@ -93,7 +93,7 @@ Address.createAddress = newAddress => {
   });
 };
 
-AddressOf.createAddressOf = newAddressOf => {
+AddressOf.create = newAddressOf => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO AddressOf SET ?", newAddressOf, (err, res) => {
       if (err) {

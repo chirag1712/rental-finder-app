@@ -41,7 +41,7 @@ const create = async (request, result) => {
     }
 
     // Save Posting in the database
-    const newPosting = await Posting.createPosting(posting);
+    const newPosting = await Posting.create(posting);
 
     // Address handling for the new posting
     const foundAddress = await Address.search(address);
@@ -50,14 +50,14 @@ const create = async (request, result) => {
         posting_id: newPosting.posting_id,
         address_id: foundAddress[0].address_id,
       });
-      AddressOf.createAddressOf(addressOf);
+      AddressOf.create(addressOf);
     } else {
-      const newAddress = await Address.createAddress(address);
+      const newAddress = await Address.create(address);
       const addressOf = new AddressOf({
         posting_id: newPosting.posting_id,
         address_id: newAddress.address_id,
       });
-      AddressOf.createAddressOf(addressOf);
+      AddressOf.create(addressOf);
     }
 
     result.status(200).json(posting);
