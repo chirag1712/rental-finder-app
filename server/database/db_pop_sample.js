@@ -77,7 +77,7 @@ const bamboo_list_scraper = async ({ browser, page, data: { pid, url, selectors 
       gender_selector, rooms_available_selector, description_selector,
       created_at_selector, address_selector
     } = selectors;
-    await page.goto(url, { timeout: 0 });
+    await page.goto(url, { timeout: 60000 });
     myConsole.log(`Connected to ${url}`);
     await page.waitForSelector(item_selector);
     myConsole.log(`Page has loaded`);
@@ -194,22 +194,32 @@ const bamboo_scraper = async () => {
       created_at_selector: '.ui.segment>h4.ui.header',
       address_selector: 'h1.header'
     };
-    const cluster = await Cluster.launch({
-      concurrency: Cluster.CONCURRENCY_BROWSER,
-      maxConcurrency: 5,
-      timeout: 90000 // ms
-    });
-    const paginationLen = 9;
-    await cluster.task(bamboo_list_scraper);
+    // const cluster = await Cluster.launch({
+    //   concurrency: Cluster.CONCURRENCY_BROWSER,
+    //   maxConcurrency: 5,
+    //   timeout: 90000 // ms
+    // });
+    const paginationLen = 1; // WIP can only scrape 1st page for now
+    // await cluster.task(bamboo_list_scraper);
+    // for (let pid = 1; pid <= paginationLen; ++pid) {
+    //   cluster.queue({
+    //     pid,
+    //     url: `https://bamboohousing.ca/homepage?page=${pid}&RoomsAvailable=&Coed=&StartTerm=&Ensuite=&LeaseType=&Price=`,
+    //     selectors
+    //   });
+    // }
+    // await cluster.idle();
+    // await cluster.close();
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0);
     for (let pid = 1; pid <= paginationLen; ++pid) {
-      cluster.queue({
+      await bamboo_list_scraper({ browser, page, data: {
         pid,
         url: `https://bamboohousing.ca/homepage?page=${pid}&RoomsAvailable=&Coed=&StartTerm=&Ensuite=&LeaseType=&Price=`,
         selectors
-      });
+      } });
     }
-    await cluster.idle();
-    await cluster.close();
   } catch (err) {
     console.error(err);
   }
