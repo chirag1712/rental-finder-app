@@ -1,4 +1,3 @@
-const { create } = require("../controllers/posting.controller.js");
 const sql = require("./db.js");
 
 // constructor
