@@ -44,8 +44,10 @@ class CreatePosting extends Component {
 
     try {
       const response = await axios.post('api/postings/create', data);
+      alert('Successfully Made a Posting!');
       console.log(response.data);
     } catch (err) {
+      alert('Error!');
       console.log(err.response.data);
     }
   }
