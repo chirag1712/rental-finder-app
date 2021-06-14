@@ -14,8 +14,8 @@ const Posting = function (posting) {
   this.description = posting.description;
 
   // check how to implement these
-  this.created_at = Date.now();
-  this.updated_at = Date.now();
+  this.created_at = posting.created_at;
+  this.updated_at = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
 const Address = function (address) {
@@ -48,7 +48,7 @@ Posting.userCheck = userId => {
 
 Posting.create = newPosting => {
   return new Promise((resolve, reject) => {
-    sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
+    sql.query('INSERT INTO Posting SET ?', newPosting, (err, res) => {
       if (err) {
         console.log("error: ", err);
         reject(err)

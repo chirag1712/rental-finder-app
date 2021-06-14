@@ -17,7 +17,7 @@ CREATE TABLE Posting(
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   pop INTEGER,
-  price_per_month SMALLINT NOT NULL CONSTRAINT price_positive CHECK(price_per_month >= 0),
+  price_per_month DECIMAL(6, 2) NOT NULL CONSTRAINT price_positive CHECK(price_per_month >= 0),
   gender_details ENUM('male', 'female', 'co-ed'),
   rooms_available TINYINT CONSTRAINT rooms_positive CHECK(rooms_available >= 0),
   total_rooms TINYINT CONSTRAINT total_rooms_positive CHECK(total_rooms >= 0),
