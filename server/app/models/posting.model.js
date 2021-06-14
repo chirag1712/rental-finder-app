@@ -1,5 +1,4 @@
 const sql = require("./db.js");
-const moment = require('moment');
 
 // constructor
 const Posting = function (posting) {
@@ -15,10 +14,8 @@ const Posting = function (posting) {
   this.description = posting.description;
 
   // check how to implement these
-  this.created_at = posting.created_at ?? moment().format();
-  //posting.created_at ?? new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-  this.updated_at = posting.created_at ?? moment().format();
-  //posting.updated_at ?? new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  this.created_at = posting.created_at
+  this.updated_at = posting.created_at
 };
 
 const Address = function (address) {

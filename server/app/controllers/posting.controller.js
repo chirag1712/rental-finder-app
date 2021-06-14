@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { Posting, Address, AddressOf } = require("../models/posting.model.js");
 
 // Create a new posting
@@ -20,8 +22,8 @@ const create = async (request, result) => {
     rooms_available: request.body.rooms_available,
     total_rooms: request.body.total_rooms,
     description: request.body.description,
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
   });
 
   // Create a Address (only if it doesn't exist)
