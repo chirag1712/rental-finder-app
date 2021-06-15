@@ -3,7 +3,7 @@ USE honkForSublet;
 CREATE TABLE User(
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(100) NOT NULL UNIQUE,
-  password CHAR(64) NOT NULL, -- SHA-256
+  password CHAR(64) NOT NULL,
   first_name VARCHAR(20),
   last_name VARCHAR(20),
   phone_num VARCHAR(20),
