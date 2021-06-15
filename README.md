@@ -1,14 +1,14 @@
 # Milestone 1 SQL and dataset files #
-./milestone1_data/sample_dataset contains the dataset that we are using for the app -> we scrape bamboohousing.ca to get sample data <br>
-./milestone1_data/sample_queries_and_data contains all the output for the sample queries for our 5 features mentioned in the report and also the test-sample.sql which contains all the sql queries for our features <br>
-./server/database/migrations contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db <br>
+`./milestone1_data/sample_dataset` contains the dataset that we are using for the app -> we scrape bamboohousing.ca to get sample data <br>
+`./milestone1_data/sample_queries_and_data` contains all the output for the sample queries for our 5 features mentioned in the report and also the test-sample.sql which contains all the sql queries for our features <br>
+`./server/database/migrations` contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db <br>
 
 # Datasets for the App #
 As of now this is what we are planning to do for the actual datasets to be used in the app:
 1. Using this https://thisrentaldoesnotexist.com/ for generating images for the rental apartments
 2. Using this https://thispersondoesnotexist.com for generating profile images for the subtenants
 3. New users and postings will populate the database by filling in details and creating postings
-4. We have a scraper for getting a sample dataset (./server/database/db_pop_sample.js), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
+4. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
 
 # Getting Started #
 1. Use `server/.sample-env` file as a template to create your own `server/.env` file
