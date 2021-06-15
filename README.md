@@ -1,14 +1,14 @@
-# For the sake of this demo we will be using table "student" to perform simple crud functionality to showcase that our chosen platforms are working #
-We have created a sample "student" Table with the DB hosted on AWS RDS. For now, using the current UI, we can add a student record to the DB and see all the added records listed on the webpage.
-
-The "student" record currently accepts a "name" for the student and also a waterloo/laurier school "email" address.
+# Milestone 1 SQL and dataset files #
+./milestone1_data/sample_dataset contains the dataset that we are using for the app -> we scrape bamboohousing.ca to get sample data
+./milestone1_data/sample_queries_and_data contains all the output for the sample queries for our 5 features mentioned in the report and also the test-sample.sql which contains all the sql queries for our features
+./server/database/migrations contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db
 
 # Datasets for the App #
 As of now this is what we are planning to do for the actual datasets to be used in the app:
-1. Using this https://thisrentaldoesnotexist.com/ for creating fake images for the rental apartments that the fake tenants will post
-2. Using this https://thispersondoesnotexist.com for fake profile images for the subtenants
-3. New users and postings will populate the database by filling in details, or randomly generated details from the above sites
-4. We are still considering further datasets to create any random address to aide the testing off the app with sample data
+1. Using this https://thisrentaldoesnotexist.com/ for generating images for the rental apartments
+2. Using this https://thispersondoesnotexist.com for generating profile images for the subtenants
+3. New users and postings will populate the database by filling in details and creating postings
+4. We have a scraper for getting a sample dataset (./server/database/db_pop_sample.js), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
 
 # Getting Started #
 1. Use `server/.sample-env` file as a template to create your own `server/.env` file
