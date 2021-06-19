@@ -26,6 +26,9 @@
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+/**/*.log
 
 /server/**/*dump.sql
-/**/*.log
+
+# MacOS
+/**/.DS_Store
