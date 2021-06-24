@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
@@ -7,9 +7,15 @@ import { Wrapper, Header } from '../CreatePosting/CreatePostingStyles';
 
 import './Landing.css';
 
-
 const Landing = ({ setUserId }) => {
     const history = useHistory();
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (user) {
+            // if user is logged in then direct them to createPosting
+            history.push("/createPosting")
+        }
+    });
 
     const [userInfo, setUserInfo] = useState({
         email: '',
@@ -48,8 +54,8 @@ const Landing = ({ setUserId }) => {
         try {
             const response = await axios.post('api/users/signup', data);
             // console.log(response);
-
             setUserId(response.data.id);
+            localStorage.setItem('user', JSON.stringify(response.data));
             history.push("/createPosting");
         } catch (err) {
             setError(err.response.data.error);
@@ -78,8 +84,8 @@ const Landing = ({ setUserId }) => {
         try {
             const response = await axios.post('api/users/login', data);
             // console.log(response);
-
-            setUserId(response.data.id)
+            setUserId(response.data.id);
+            localStorage.setItem('user', JSON.stringify(response.data));
             history.push("/createPosting");
         } catch (err) {
             setError(err.response.data.error);
@@ -90,7 +96,7 @@ const Landing = ({ setUserId }) => {
     return (
         <Wrapper>
             <div className="Dialog">
-            <Header> Honk For Sublet </Header>
+                <Header> Honk For Sublet </Header>
                 {createUser &&
                     <>
                         <Input
