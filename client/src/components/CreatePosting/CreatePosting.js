@@ -5,8 +5,7 @@ import axios from 'axios';
 
 import { Wrapper, Header } from './CreatePostingStyles';
 
-const CreatePosting = ({ user_id }) => {
-  const history = useHistory();
+const CreatePosting = ({ user_id, setUserId }) => {
 
   const [info, setInfo] = useState({
     term: '',
@@ -23,10 +22,6 @@ const CreatePosting = ({ user_id }) => {
     postal_code: ''
   });
 
-  useEffect(() => {
-    if(user_id==null) history.push('/');
-  }, []);
-
   const handleChange = e => setInfo({ ...info, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
@@ -42,6 +37,11 @@ const CreatePosting = ({ user_id }) => {
       alert('Error!');
       console.log(err.response.data);
     }
+  }
+
+  const handleLogout = () => {
+    setUserId(null);
+    localStorage.clear();
   }
 
   return (
@@ -114,6 +114,7 @@ const CreatePosting = ({ user_id }) => {
         <br></br>
         <input type="submit" value="submit" />
       </form>
+      <button onClick={handleLogout}>logout</button>
     </Wrapper>
   );
 }
