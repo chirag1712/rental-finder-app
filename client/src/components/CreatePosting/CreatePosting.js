@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import axios from 'axios';
 
-import { Wrapper, Header } from './CreatePostingStyles';
+import { Wrapper, Header } from '../../styles/AppStyles.js';
 
 const CreatePosting = ({ user_id, setUserId }) => {
 
