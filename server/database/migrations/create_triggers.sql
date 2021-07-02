@@ -1,5 +1,6 @@
 USE honkForSublet;
 
+DROP TRIGGER IF EXISTS UserPostingUpperBound;
 DELIMITER //
 CREATE TRIGGER UserPostingUpperBound BEFORE INSERT ON Posting
 FOR EACH ROW
@@ -15,6 +16,7 @@ BEGIN
 END;//
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS PostingPhotoUpperBound;
 DELIMITER //
 CREATE TRIGGER PostingPhotoUpperBound BEFORE INSERT ON PostingPhoto
 FOR EACH ROW

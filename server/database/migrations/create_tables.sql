@@ -24,9 +24,9 @@ CREATE TABLE Posting(
   description TEXT,
   created_at DATETIME NOT NULL,
   updated_at DATETIME NOT NULL,
-  CONSTRAINT end_date_after_start_date CHECK(end_date >= start_date)
+  CONSTRAINT end_date_after_start_date CHECK(end_date >= start_date),
   CONSTRAINT updated_at_after_created_at CHECK(updated_at >= created_at)
-);
+) DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE PostingPhoto(
   photo_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
