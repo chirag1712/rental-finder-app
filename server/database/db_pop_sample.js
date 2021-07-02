@@ -1,6 +1,5 @@
 const { createWriteStream } = require('fs');
 const puppeteer = require('puppeteer');
-// const { Cluster } = require('puppeteer-cluster');
 const Cluster = require('./my-puppeteer-cluster/Cluster.js').default;
 const https = require('https');
 const bcrypt = require('bcrypt');
@@ -293,16 +292,6 @@ async function bamboo_scraper() {
     }
     await cluster.idle();
     await cluster.close();
-    // const browser = await puppeteer.launch();
-    // const page = await browser.newPage();
-    // await page.setDefaultNavigationTimeout(0);
-    // for (let pid = 1; pid <= paginationLen; ++pid) {
-    //   await bamboo_list_scraper({ browser, page, data: {
-    //     pid,
-    //     url: `https://bamboohousing.ca/homepage?page=${pid}&RoomsAvailable=&Coed=&StartTerm=&Ensuite=&LeaseType=&Price=`,
-    //     selectors
-    //   } });
-    // }
   } catch (err) {
     console.error(err);
   }

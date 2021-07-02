@@ -33,8 +33,7 @@
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
-    "puppeteer": "^10.1.0",
-    "puppeteer-cluster": "^0.22.0"
+    "puppeteer": "^10.1.0"
   },
   "devDependencies": {
     "dotenv": "^10.0.0"
