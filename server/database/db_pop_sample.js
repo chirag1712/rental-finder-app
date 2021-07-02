@@ -1,3 +1,4 @@
+const { getPostalCodeAPI } = require('./db_fill_missing_postal_codes.js');
 const { createWriteStream } = require('fs');
 const puppeteer = require('puppeteer');
 const Cluster = require('./my-puppeteer-cluster/Cluster.js').default;
@@ -68,24 +69,30 @@ async function fb_scraper() {
   }
 };
 
-async function createFakeUser() {
+async function getFakeUser(myConsole = console) {
   const data = await new Promise((resolve, reject) => {
-    const req = https.request(
-      { hostname: 'randomuser.me', port: 443, path: '/api/', method: 'GET' },
-      res => {
-        let body = '';
-        res.on('data', chunk => {
-          body += chunk;
-        });
-        res.on('end', () => {
-          try {
-            resolve(JSON.parse(body));
-          } catch (err) {
-            reject(err);
-          }
-        });
-      }
-    ).end();
+    const options = { hostname: 'randomuser.me', port: 443, path: '/api/', method: 'GET' };
+    myConsole.log(`${options.method} ${options.hostname}${options.path}`);
+    const req = https.request(options, res => {
+      const all_chunks = [];
+      res.on('data', chunk => {
+        all_chunks.push(chunk);
+      });
+      res.on('end', () => {
+        try {
+          const body = Buffer.concat(all_chunks).toString();
+          myConsole.log(
+            `RETURNED STATUS ${res.statusCode}\nHEADERS:`,
+            res.headers,
+            '\nBODY:\n',
+            body
+          );
+          resolve(JSON.parse(body));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }).end();
   });
   const first_name = data.results[0].name.first;
   const last_name = data.results[0].name.last;
@@ -95,8 +102,8 @@ async function createFakeUser() {
   return { email, password, first_name, last_name };
 };
 
-async function getUser() {
-  const newUser = await createFakeUser(); // consider scraping real profiles on Bamboo (need an account)
+async function getUser(myConsole = console) {
+  const newUser = await getFakeUser(myConsole); // consider scraping real profiles on Bamboo (need an account)
   try {
     // check for existing user
     const { user_id } = await User.findOne(newUser.email);
@@ -104,7 +111,7 @@ async function getUser() {
     if (userPostings.length < 3) {
       return user_id;
     }
-    return await getUser();
+    return await getUser(myConsole);
   } catch (error) {
     return await User.signup(newUser);
   }
@@ -130,25 +137,33 @@ function parseGender(gender) {
   else throw 'unhandled gender';
 };
 
-function randomPostalCode() {
-  const nums = [1, 2, 3].map(() => Math.floor(Math.random() * 10));
-  const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
-  const chars = ['A', 'B'].map(() => alphabet[Math.floor(Math.random() * alphabet.length)])
-  return `N${nums[0]}${chars[0]}${nums[1]}${chars[1]}${nums[2]}`;
+function getPostalCode(street_num, street_name, city, myConsole = console) {
+  return new Promise(async resolve => {
+    const existingAddress = await Address.search({ street_num, street_name, city });
+    if (existingAddress[0]) { // check for existing address in database
+      resolve({ existingAddress: existingAddress[0], postal_code: existingAddress[0].postal_code });
+      return;
+    }
+    try { // lookup postal code for new address
+      const postal_code = await getPostalCodeAPI(street_num, street_name, city, myConsole);
+      resolve({ existingAddress: null, postal_code });
+    } catch (error) { // return null postal code as last resort
+      resolve({ existingAddress: null, postal_code: null });
+    }
+  });
 };
 
 async function cleanData(data, myConsole = console) {
   // TODO: address validation
   const addressRegex = /((.*),\s*)?(\d+)\s+(.*),\s*(\w+(\s*\w+)*)/;
-  const address = new Address({
-    street_num: parseInt(data.address.match(addressRegex)[3]),
-    street_name: data.address.match(addressRegex)[4],
-    city: data.address.match(addressRegex)[5],
-    postal_code: randomPostalCode(), // should improve this
-  });
+  const street_num = parseInt(data.address.match(addressRegex)[3]);
+  const street_name = data.address.match(addressRegex)[4];
+  const city = data.address.match(addressRegex)[5];
+  const { existingAddress, postal_code } = await getPostalCode(street_num, street_name, city, myConsole);
+  const address = new Address({ street_num, street_name, city, postal_code });
   myConsole.log(address);
   // TODO: posting validation
-  const user_id = await getUser();
+  const user_id = await getUser(myConsole);
   const startDate = new Date(data.start_date);
   const duration = parseInt(data.duration.replace(/(^\d+)(.+$)/i, '$1'));
   const endDate = new Date(startDate.setMonth(startDate.getMonth() + duration));
@@ -166,7 +181,7 @@ async function cleanData(data, myConsole = console) {
     updated_at: created_at
   });
   myConsole.log(posting);
-  return { posting, address };
+  return { posting, address, existingAddress };
 }
 
 async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors, timeout } }) {
@@ -234,14 +249,12 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
         myConsole.error('Posting skipped due to error: ', error);
         continue;
       }
-      const { posting, address } = cleanedData;
+      const { posting, address, existingAddress } = cleanedData;
       const newPosting = await Posting.create(posting);
-      // Copied from controller for now
-      const foundAddress = await Address.search(address);
-      if (foundAddress[0]) {
+      if (existingAddress) {
         const addressOf = new AddressOf({
           posting_id: newPosting.posting_id,
-          address_id: foundAddress[0].address_id,
+          address_id: existingAddress.address_id,
         });
         AddressOf.create(addressOf);
       } else {

@@ -64,8 +64,8 @@ Posting.create = newPosting => {
 // TODO(chirag): look into comibining search and create address endoints into one
 Address.search = address => {
   return new Promise((resolve, reject) => {
-    var query = "SELECT * FROM Address WHERE street_num = ? AND postal_code = ?";
-    sql.query(query, [address.street_num, address.postal_code], (err, res) => {
+    var query = "SELECT * FROM Address WHERE city = ? AND street_name = ? AND street_num = ?";
+    sql.query(query, [address.city, address.street_name, address.street_num], (err, res) => {
       if (err) {
         console.log("error: ", err);
         reject(err);
