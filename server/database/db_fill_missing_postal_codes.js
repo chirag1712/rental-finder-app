@@ -60,4 +60,5 @@ function getPostalCodeAPI(street_num, street_name, city, myConsole = console) {
   }
 })();
 
+exports.sql = sql;
 exports.getPostalCodeAPI = getPostalCodeAPI;

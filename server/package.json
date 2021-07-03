@@ -5,10 +5,12 @@
   "main": "server.js",
   "scripts": {
     "db_setup": "node -r dotenv/config database/db_setup.js",
+    "db_backup": "node -r dotenv/config database/db_backup.js",
     "db_dump": "node -r dotenv/config database/db_dump.js",
     "db_import": "node -r dotenv/config database/db_import.js",
     "db_exec": "node -r dotenv/config database/db_exec.js",
     "db_pop_sample": "node -r dotenv/config database/db_pop_sample.js",
+    "db_migrate_addresses": "node -r dotenv/config database/db_migrate_addresses",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config server",
     "server": "nodemon -r dotenv/config server",

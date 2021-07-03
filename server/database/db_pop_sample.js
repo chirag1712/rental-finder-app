@@ -1,11 +1,20 @@
-const { getPostalCodeAPI } = require('./db_fill_missing_postal_codes.js');
-const { createWriteStream } = require('fs');
+const { sql, getPostalCodeAPI } = require('./db_fill_missing_postal_codes.js');
+const { createWriteStream, readdirSync, unlinkSync } = require('fs');
+const path = require('path');
 const puppeteer = require('puppeteer');
 const Cluster = require('./my-puppeteer-cluster/Cluster.js').default;
 const https = require('https');
 const bcrypt = require('bcrypt');
 const User = require('../app/models/user.model.js');
 const { Posting, Address, AddressOf } = require('../app/models/posting.model.js');
+
+function deleteLogs() {
+  const logsDirectory = 'database/logs';
+  const files = readdirSync(logsDirectory);
+  for (const file of files) {
+    unlinkSync(path.join(logsDirectory, file));
+  }
+}
 
 // WIP boilerplate for the future
 async function fb_scraper() {
@@ -137,9 +146,25 @@ function parseGender(gender) {
   else throw 'unhandled gender';
 };
 
+function dbFindAddress(address) {
+  return new Promise((resolve, reject) => {
+    var query = "SELECT * FROM Address WHERE city = ? AND street_name = ? AND street_num = ?";
+    sql.query(query, [address.city, address.street_name, address.street_num], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err);
+      } else {
+        console.log("address from db: ", res);
+        resolve(res);
+      }
+    }
+    );
+  });
+};
+
 function getPostalCode(street_num, street_name, city, myConsole = console) {
   return new Promise(async resolve => {
-    const existingAddress = await Address.search({ street_num, street_name, city });
+    const existingAddress = await dbFindAddress({ street_num, street_name, city });
     if (existingAddress[0]) { // check for existing address in database
       resolve({ existingAddress: existingAddress[0], postal_code: existingAddress[0].postal_code });
       return;
@@ -290,7 +315,7 @@ async function bamboo_scraper() {
     const timeout = 90000; // ms
     const cluster = await Cluster.launch({
       concurrency: Cluster.CONCURRENCY_BROWSER,
-      maxConcurrency: 6,
+      maxConcurrency: 4,
       timeout
     });
     const paginationLen = 6; // update this to number of pages on target site
@@ -311,6 +336,7 @@ async function bamboo_scraper() {
 };
 
 (async () => {
+  deleteLogs();
   await bamboo_scraper();
   console.log(
     '\x1b[42m\x1b[30m', // bg-green fg-black
