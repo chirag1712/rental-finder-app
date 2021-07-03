@@ -33,7 +33,9 @@ As of now this is what we are planning to do for the actual datasets to be used 
     4. `npm run db_import <file_path>` to import database dump **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
   - ## Fresh local database instance **(WILL DELETE DATA)** ##
     1. Set database credentials in `.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
+    2. `npm run db_backup` backs up database instance **OPTIONAL BUT HIGHLY RECOMMENDED**
     2. `npm run db_setup` to get a fresh database instance
+    3. `npm run db_migrate_addresses` to migrate Address table from backup database to new database **OPTIONAL BUT HIGHLY RECOMMENDED FOR SCRAPING**
     3. `npm run db_pop_sample` to populate the database with scraped sample data
   - ## Lastly, you can execute any SQL script via
     ```
