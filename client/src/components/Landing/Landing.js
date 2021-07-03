@@ -9,11 +9,12 @@ import './Landing.css';
 
 const Landing = ({ setUserId }) => {
     const history = useHistory();
+
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user) {
             // if user is logged in then direct them to createPosting
-            history.push("/createPosting")
+            history.push("/Postings")
         }
     });
 
@@ -56,7 +57,7 @@ const Landing = ({ setUserId }) => {
             // console.log(response);
             setUserId(response.data.id);
             localStorage.setItem('user', JSON.stringify(response.data));
-            history.push("/createPosting");
+            history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);
             // console.log(err.response);
@@ -86,7 +87,7 @@ const Landing = ({ setUserId }) => {
             // console.log(response);
             setUserId(response.data.id);
             localStorage.setItem('user', JSON.stringify(response.data));
-            history.push("/createPosting");
+            history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);
             // console.log(err.response);
