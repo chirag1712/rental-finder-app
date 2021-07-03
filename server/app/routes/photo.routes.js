@@ -12,6 +12,6 @@ var upload = multer({ storage: storage });
 // @route  POST api/photos/upload
 // @desc   uploads a photo
 // @access PRIVATE
-router.post("/upload", upload.single("file"), photos.upload);
+router.post("/upload", upload.array("file"), photos.upload);
 
 module.exports = router;
