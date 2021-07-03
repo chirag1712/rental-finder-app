@@ -11,9 +11,19 @@ As of now this is what we are planning to do for the actual datasets to be used 
 4. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
 
 # Getting Started #
-1. Use `server/.sample-env` file as a template to create your own `server/.env` file
-
-2. `cd server` and set up your local database in 2 ways:
+- Our production database is an AWS RDS instance, which functions through user `admin`
+- `admin` is a super user which allows them to create triggers
+1. Install MySQL locally and run sql:
+  ```sql
+  CREATE USER 'admin'@'%' IDENTIFIED BY 'rds_password_here'
+  ```
+2. Make `admin` a super user by running:
+  ```sql
+  GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%';
+  FLUSH PRIVILEGES;
+  ```
+3. Use `server/.sample-env` file as a template to create your own `server/.env` file
+4. `cd server` and set up your local database in 2 ways:
   - TIP: to point to local mysql db, set `NODE_ENV` to `dev` and to point to RDS just set it to `prod`. Example:
   `NODE_ENV=dev` or `NODE_ENV=prod` in your `server/.env`
   - ## Sync with production database in RDS **(WILL OVERWRITE DATA)** ##
@@ -23,9 +33,18 @@ As of now this is what we are planning to do for the actual datasets to be used 
     4. `npm run db_import <file_path>` to import database dump **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
   - ## Fresh local database instance **(WILL DELETE DATA)** ##
     1. Set database credentials in `.env` to point to local instance **(MAKE SURE YOU'RE NOT POINTING AT RDS)**
+    2. `npm run db_backup` backs up database instance **OPTIONAL BUT HIGHLY RECOMMENDED**
     2. `npm run db_setup` to get a fresh database instance
+    3. `npm run db_migrate_addresses` to migrate Address table from backup database to new database **OPTIONAL BUT HIGHLY RECOMMENDED FOR SCRAPING**
     3. `npm run db_pop_sample` to populate the database with scraped sample data
-  - ## Lastly, you can execute any SQL script via `mysql -h <HOSTNAME> -u <USER> -p < <sql_file>` or `npm run db_exec <sql_file>` which refers to the DB in your `.env` ##
+  - ## Lastly, you can execute any SQL script via
+    ```
+    mysql -h <HOSTNAME> -u <USER> -p < <sql_file>
+    ```
+    ## or ##
+    ```
+    npm run db_exec <sql_file>
+    ```
 
 3. Install dependencies by running the following in the project root:
 `cd server && npm i` <br>

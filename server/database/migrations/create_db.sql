@@ -1,1 +1,1 @@
-CREATE DATABASE honkForSublet;
+CREATE DATABASE honkForSublet DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;

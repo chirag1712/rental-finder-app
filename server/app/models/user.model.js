@@ -37,4 +37,25 @@ User.findOne = email => {
   });
 }
 
+User.getPostings = user_id => {
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT p.*, a.*, ph.photo_id, ph.url
+    FROM Posting AS p
+    NATURAL JOIN AddressOf AS ao
+    NATURAL JOIN Address AS a
+    LEFT OUTER JOIN PostingPhoto AS ph
+    ON p.posting_id = ph.posting_id
+    NATURAL JOIN User AS u
+    WHERE p.user_id = ?;`, user_id, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err);
+      } else {
+        console.log(`user ${user_id}'s postings: `, res);
+        resolve(res);
+      }
+    });
+  });
+};
+
 module.exports = User;
