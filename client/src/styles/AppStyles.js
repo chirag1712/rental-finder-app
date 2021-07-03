@@ -8,7 +8,7 @@ export const AppDiv = styled.div`
 
 export const Wrapper = styled.div`
 height: 100%;
-width:100%;
+width: 100%;
 background-image: url(${bg});
 background-size:cover;
 backdrop-filter: blur(4px);
@@ -16,9 +16,9 @@ position: absolute;
 `;
 
 export const Header = styled.h1`
-margin-top:0;
-text-align: center;
-color: #000000;
+ margin-top:0;
+ text-align: center;
+ color: #000000;
 `;
 
 export const Margin50 = styled.div`
@@ -52,7 +52,7 @@ export const GreenButton = styled.button`
 export const InputBox = styled.input`
   width: 357px;
   font-size: 1.2rem;
-  color: #9D9E9F;
+  color: #808080;
   background-color: transparent;
   margin-top: 15px;
   margin-bottom: 15px;
