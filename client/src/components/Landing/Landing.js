@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
+import logo from '../../images/HonkForSubletLogo.png'
 
 import Input from './Input.js'
-import { Wrapper, Header } from '../CreatePosting/CreatePostingStyles';
-
-import './Landing.css';
+import { Wrapper, Header, GreenButton, BigLogo, Margin50, Margin100} from '../../styles/AppStyles.js';
+import { Dialog, WhiteBox} from './LandingStyles.js';
 
 const Landing = ({ setUserId }) => {
     const history = useHistory();
@@ -95,8 +95,12 @@ const Landing = ({ setUserId }) => {
 
     return (
         <Wrapper>
-            <div className="Dialog">
+            <Dialog>
+            <WhiteBox>
+            <Margin50></Margin50>
+            <BigLogo src={logo}></BigLogo>
                 <Header> Honk For Sublet </Header>
+                <Margin50></Margin50>
                 {createUser &&
                     <>
                         <Input
@@ -112,6 +116,7 @@ const Landing = ({ setUserId }) => {
                             value={userInfo.last_name}
                             onChange={onChange} />
                     </>
+                    
                 }
                 <Input
                     type='text'
@@ -134,19 +139,24 @@ const Landing = ({ setUserId }) => {
                         onChange={onChange} />
                 }
                 {error && <h6>{error}</h6>}
-                <button
+                {!createUser && 
+                    <Margin100></Margin100>
+                }
+                <Margin50></Margin50>
+                <GreenButton
                     className="Btn"
                     onClick={createUser ? onSignupSubmit : onLoginSubmit} >
                     {createUser ? 'Sign Up' : 'Log In'}
-                </button>
+                </GreenButton>
                 {!createUser &&
-                    <button
+                    <GreenButton
                         className="Btn"
                         onClick={() => setCreateUser(!createUser)} >
                         Create Account
-                    </button>
+                    </GreenButton>
                 }
-            </div>
+                </WhiteBox>
+            </Dialog>
         </Wrapper>
     );
 }
