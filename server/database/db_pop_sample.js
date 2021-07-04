@@ -62,9 +62,9 @@ async function fb_scraper() {
           // myConsole.log(`Item page loaded`);
           const price = await page.evaluate(sel => document.querySelector(sel).innerText, price_selector);
           await page.goBack();
-          myConsole.log({pid, i, index, price});
+          myConsole.log({ pid, i, index, price });
         } catch (err) {
-          console.error({pid, i, index, err});
+          console.error({ pid, i, index, err });
         }
       }
     });
@@ -210,7 +210,7 @@ async function cleanData(data, myConsole = console) {
 }
 
 async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors, timeout } }) {
-  const logStream= createWriteStream(`database/logs/scraped_page${pid}.log`);
+  const logStream = createWriteStream(`database/logs/scraped_page${pid}.log`);
   const myConsole = new console.Console(logStream, logStream);
   const {
     item_selector, start_date_selector, duration_selector, price_selector,
