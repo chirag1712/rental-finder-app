@@ -1,8 +1,9 @@
+import { InputBox } from '../../styles/AppStyles.js';
 
 const Input = ({type, name, placeHolder, value, onChange}) => {
 
     return (
-        <input
+        <InputBox
             className='Input'
             type={type}
             name={name}
