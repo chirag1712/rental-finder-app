@@ -44,7 +44,7 @@ const Postings = () => {
         setFilterInfo({ ...filterInfo, [field]: option });
     }
 
-    const onChange = e => setFilterInfo({ ...filterInfo, keyword: e.target.value })
+    const onChange = e => setFilterInfo({ ...filterInfo, keywords: e.target.value })
 
     const changePage = async (e) => {
         let direction = e.target.id;
