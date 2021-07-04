@@ -11,11 +11,14 @@ const Posting = function (posting) {
   this.gender_details = posting.gender_details;
   this.rooms_available = posting.rooms_available;
   this.total_rooms = posting.total_rooms;
+  this.ac = posting.ac;
+  this.washrooms = posting.washrooms;
+  this.wifi = posting.wifi;
+  this.parking = posting.parking;
+  this.laundry = posting.laundry;
   this.description = posting.description;
-
-  // check how to implement these
-  this.created_at = posting.created_at
-  this.updated_at = posting.created_at
+  this.created_at = posting.created_at;
+  this.updated_at = posting.created_at;
 };
 
 const Address = function (address) {
