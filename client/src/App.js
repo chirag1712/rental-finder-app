@@ -1,5 +1,5 @@
-import './styles/App.css'
-import './styles/index.css'
+import { AppDiv } from './styles/AppStyles.js';
+import './styles/index.css';
 import Landing from './components/Landing/Landing';
 import Postings from './components/Postings/Postings';
 import CreatePosting from './components/CreatePosting/CreatePosting';
@@ -20,7 +20,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <AppDiv>
       <Router>
         <Switch>
           <Route path="/" exact component={() => <Landing setUserId={setUserId} />} />
@@ -28,7 +28,7 @@ function App() {
           <PrivateRoute path="/createPosting" render={() => <CreatePosting user_id={userId} setUserId={setUserId} />} />
         </Switch>
       </Router>
-    </div>)
+    </AppDiv>)
 }
 
 export default App;
