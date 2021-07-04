@@ -3,7 +3,7 @@ const { createReadStream, createWriteStream } = require('fs');
 const { spawn } = require('child_process');
 
 exports.exec_sql_script = (path, args = []) => {
-	// console.log(`Executing ${path}`);
+	console.log(`Executing ${path}`);
 	return new Promise((resolve, reject) => {
 		const mysql = spawn(
 			process.env.MYSQL_PATH,
@@ -17,7 +17,7 @@ exports.exec_sql_script = (path, args = []) => {
 		const stream = createReadStream(path);
 		stream.pipe(mysql.stdin);
 		mysql.stdout.on('data', data => {
-			// console.log(`${data}`);
+			console.log(`${data}`);
 		});
 		mysql.stderr.on('data', data => {
 			console.error(`${data}`);
@@ -29,7 +29,7 @@ exports.exec_sql_script = (path, args = []) => {
 }
 
 exports.dump = (path, args = []) => {
-	// console.log(`Dumping to ${path}`);
+	console.log(`Dumping to ${path}`);
 	return new Promise((resolve, reject) => {
 		const mysqldump = spawn(
 			process.env.MYSQLDUMP_PATH,
