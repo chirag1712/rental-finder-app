@@ -1,6 +1,7 @@
 import { AppDiv } from './styles/AppStyles.js';
 import './styles/index.css';
-import Landing from './components/Landing/Landing';
+//import Landing from './components/Landing/Landing';
+import Landing from './components/ShowSinglePosting/ShowSinglePosting';
 import CreatePosting from './components/CreatePosting/CreatePosting';
 import PrivateRoute from './components/PrivateRoute';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';

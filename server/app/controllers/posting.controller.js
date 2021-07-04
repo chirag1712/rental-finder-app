@@ -69,4 +69,13 @@ const create = async (request, result) => {
   }
 };
 
-module.exports = { create }
+const showPosting = async (request, response) => {
+    try {
+		const post = await Posting.getSinglePosting(request.body)
+		response.status(200).json({ list: post });
+	} catch (err) {
+		return response.status(500).send({ error: 'Internal server Error' })
+	}
+}
+
+module.exports = { create, showPosting }

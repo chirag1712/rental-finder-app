@@ -46,6 +46,24 @@ Posting.userCheck = userId => {
   });
 }
 
+Posting.getSinglePosting = getPosting => {
+    const query = `SELECT p.*, a.*, ph.photo_id, ph.url
+    FROM Posting AS p
+    NATURAL JOIN AddressOf AS ao
+    NATURAL JOIN Address AS a
+    LEFT OUTER JOIN PostingPhoto AS ph
+    ON p.posting_id = ph.posting_id
+    NATURAL JOIN User AS u
+    WHERE p.posting_id = 1;`;
+
+    return new Promise((resolve, reject) => {
+		sql.query(query, (err, res) => {
+			if (err) reject(err);
+			else resolve(res);
+		});
+	})
+}
+
 Posting.create = newPosting => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
