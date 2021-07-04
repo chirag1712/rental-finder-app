@@ -2,23 +2,23 @@ const sql = require("./db.js");
 
 // constructor
 const Posting = function (posting) {
-  this.user_id = posting.user_id;
-  this.term = posting.term;
-  this.start_date = posting.start_date;
-  this.end_date = posting.end_date;
-  this.pop = 0;
-  this.price_per_month = posting.price_per_month;
-  this.gender_details = posting.gender_details;
-  this.rooms_available = posting.rooms_available;
-  this.total_rooms = posting.total_rooms;
-  this.ac = posting.ac;
-  this.washrooms = posting.washrooms;
-  this.wifi = posting.wifi;
-  this.parking = posting.parking;
-  this.laundry = posting.laundry;
-  this.description = posting.description;
-  this.created_at = posting.created_at;
-  this.updated_at = posting.created_at;
+	this.user_id = posting.user_id;
+	this.term = posting.term;
+	this.start_date = posting.start_date;
+	this.end_date = posting.end_date;
+	this.pop = 0;
+	this.price_per_month = posting.price_per_month;
+	this.gender_details = posting.gender_details;
+	this.rooms_available = posting.rooms_available;
+	this.total_rooms = posting.total_rooms;
+	this.ac = posting.ac;
+	this.washrooms = posting.washrooms;
+	this.wifi = posting.wifi;
+	this.parking = posting.parking;
+	this.laundry = posting.laundry;
+	this.description = posting.description;
+	this.created_at = posting.created_at;
+	this.updated_at = posting.created_at;
 };
 
 const Address = function (address) {
@@ -63,7 +63,10 @@ Posting.getPostings = filterInfo => {
 		if (filter.length > 6) filter += ' AND ';
 		filter += `gender_details = '${gender}'`;
 	}
-	// search implementation goes here
+	if (keywords != null) {
+		if (filter.length > 6) filter += ' AND ';
+		filter += `MATCH (description) AGAINST('${keywords}')`;
+	}
 
 	let sortStatement = 'updated_at DESC'
 	if (sort === 'popularity') sortStatement = 'pop DESC';
