@@ -21,24 +21,46 @@ const CreatePosting = ({ user_id, setUserId }) => {
         street_name: '',
         city: '',
         postal_code: '',
-        ac: '',
+        ac: null,
         washrooms: '',
-        wifi: '',
-        parking: '',
+        wifi: null,
+        parking: null,
         laundry: '',
     });
 
     const handleChange = e => setInfo({ ...info, [e.target.name]: e.target.value });
 
+    // const handleChange = (e) => {
+    //     let updatedValue = e.target.value;
+
+    //     if (updatedValue === "true" || updatedValue === "false") {
+    //         updatedValue = JSON.parse(updatedValue);
+    //     }
+    //     const updatedItems = {
+    //         ...info,
+    //         [e.target.name]: e.target.value
+    //     }
+    //     this.info.setInfo(this.info, updatedItems);
+    // }
+
+    const format = str => {
+        if ('true' === str) return true
+        if ('false' === str) return false
+        if (!str) return null
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const data = { user_id, ...info };
+        data.ac = format(data.ac)
+        data.parking = format(data.parking);
+        data.wifi = format(data.wifi);
 
         try {
             const response = await axios.post('api/postings/create', data);
             alert('Successfully Made a Posting!');
-            // console.log(response.data);
+            console.log(response.data);
         } catch (err) {
             alert('Error!');
             // console.log(err.response.data);
@@ -103,8 +125,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
                         <WrapperDiv>
                             <SelectBox name="ac" id="ac" onChange={handleChange}>
                                 <option value="" disabled selected>Is there A/C</option>
-                                <option value='true'>Yes</option>
-                                <option value='false'>No</option>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
                             </SelectBox>
                         </WrapperDiv>
                         <Input name='washrooms' type='text' onChange={handleChange} placeHolder='Total Number of Washrooms' />
@@ -112,15 +134,15 @@ const CreatePosting = ({ user_id, setUserId }) => {
                         <WrapperDiv>
                             <SelectBox name="wifi" id="wifi" onChange={handleChange}>
                                 <option value="" disabled selected>Wifi Options</option>
-                                <option value='true'>Included</option>
-                                <option value='false'>Not Included</option>
+                                <option value="true" >Included</option>
+                                <option value="false">Not Included</option>
                             </SelectBox>
                         </WrapperDiv>
                         <WrapperDiv>
                             <SelectBox name="parking" id="parking" onChange={handleChange}>
                                 <option value="" disabled selected>Is there Parking?</option>
-                                <option value='true'>Included</option>
-                                <option value='false'>Not Included</option>
+                                <option value="true">Included</option>
+                                <option value="false">Not Included</option>
                             </SelectBox>
                         </WrapperDiv>
                         <WrapperDiv>
