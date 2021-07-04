@@ -9,11 +9,12 @@ import './Landing.css';
 
 const Landing = ({ setUserId }) => {
     const history = useHistory();
+
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user) {
             // if user is logged in then direct them to createPosting
-            history.push("/createPosting")
+            history.push("/Postings")
         }
     });
 
@@ -36,7 +37,7 @@ const Landing = ({ setUserId }) => {
     };
 
     const onSignupSubmit = async () => {
-        console.log("Sign Up Pressed");
+        // console.log("Sign Up Pressed");
 
         if (userInfo.email === '' || userInfo.first_name === '' ||
             userInfo.last_name === '' || userInfo.password === '') {
@@ -56,7 +57,7 @@ const Landing = ({ setUserId }) => {
             // console.log(response);
             setUserId(response.data.id);
             localStorage.setItem('user', JSON.stringify(response.data));
-            history.push("/createPosting");
+            history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);
             // console.log(err.response);
@@ -64,7 +65,7 @@ const Landing = ({ setUserId }) => {
     }
 
     const onLoginSubmit = async () => {
-        console.log("Login Pressed Pressed");
+        // console.log("Login Pressed Pressed");
 
         if (userInfo.email === '' || userInfo.password === '') {
             setError('Please enter all the fields');
@@ -86,7 +87,7 @@ const Landing = ({ setUserId }) => {
             // console.log(response);
             setUserId(response.data.id);
             localStorage.setItem('user', JSON.stringify(response.data));
-            history.push("/createPosting");
+            history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);
             // console.log(err.response);
