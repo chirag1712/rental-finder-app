@@ -36,7 +36,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
       // console.log(response.data);
     } catch (err) {
       alert('Error!');
-      console.log(err.response.data);
+      // console.log(err.response.data);
     }
   }
 
