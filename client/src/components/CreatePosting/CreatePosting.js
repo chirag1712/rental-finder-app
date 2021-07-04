@@ -82,7 +82,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                     <Margin50></Margin50>
 
                     <form action="" onSubmit={handleSubmit}>
-                        <Input name='street_num' type='text' onChange={handleChange} placeHolder='Street Number' />
+                        <Input name='street_num' type='number' onChange={handleChange} placeHolder='Street Number' />
                         <br></br>
                         <Input name='street_name' type='text' onChange={handleChange} placeHolder='Street Name' />
                         <br></br>
@@ -108,7 +108,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                             min="2021-05-01" max="2022-08-31" onChange={handleChange}></input>
                         <br></br>
 
-                        <Input name='price_per_month' type='text' onChange={handleChange} placeHolder='Price Per Month' />
+                        <Input name='price_per_month' type='number' onChange={handleChange} placeHolder='Price Per Month' />
                         <WrapperDiv>
                             <SelectBox name="gender_details" id="gender_details" onChange={handleChange}>
                                 <option value="" disabled selected>Who Can Live Here?</option>
@@ -117,9 +117,9 @@ const CreatePosting = ({ user_id, setUserId }) => {
                                 <option value="co-ed">Co-ed</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='rooms_available' type='text' onChange={handleChange} placeHolder='Number of Rooms Available' />
+                        <Input name='rooms_available' type='number' onChange={handleChange} placeHolder='Number of Rooms Available' />
                         <br></br>
-                        <Input name='total_rooms' type='text' onChange={handleChange} placeHolder='Number of Rooms Total' />
+                        <Input name='total_rooms' type='number' onChange={handleChange} placeHolder='Number of Rooms Total' />
                         <br></br>
 
                         <WrapperDiv>
@@ -129,7 +129,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                                 <option value="false">No</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='washrooms' type='text' onChange={handleChange} placeHolder='Total Number of Washrooms' />
+                        <Input name='washrooms' type='number' onChange={handleChange} placeHolder='Total Number of Washrooms' />
                         <br></br>
                         <WrapperDiv>
                             <SelectBox name="wifi" id="wifi" onChange={handleChange}>
