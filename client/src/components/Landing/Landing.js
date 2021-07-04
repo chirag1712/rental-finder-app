@@ -37,7 +37,7 @@ const Landing = ({ setUserId }) => {
     };
 
     const onSignupSubmit = async () => {
-        console.log("Sign Up Pressed");
+        // console.log("Sign Up Pressed");
 
         if (userInfo.email === '' || userInfo.first_name === '' ||
             userInfo.last_name === '' || userInfo.password === '') {
@@ -65,7 +65,7 @@ const Landing = ({ setUserId }) => {
     }
 
     const onLoginSubmit = async () => {
-        console.log("Login Pressed Pressed");
+        // console.log("Login Pressed Pressed");
 
         if (userInfo.email === '' || userInfo.password === '') {
             setError('Please enter all the fields');

@@ -13,10 +13,10 @@ User.signup = newUser => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO User SET ?", newUser, (err, res) => {
       if (err) {
-        console.log("error: ", err);
+        // console.log("error: ", err);
         reject(err);
       } else {
-        console.log("created user: ", { user_id: res.insertId, ...newUser });
+        // console.log("created user: ", { user_id: res.insertId, ...newUser });
         resolve(res.insertId);
       }
     });
@@ -27,10 +27,10 @@ User.findOne = email => {
   return new Promise((resolve, reject) => {
     sql.query("SELECT * FROM User WHERE email = ?", email, (err, res) => {
       if (err) {
-        console.log("error: ", err);
+        // console.log("error: ", err);
         reject(err);
       } else {
-        console.log("user found: ", res);
+        // console.log("user found: ", res);
         resolve(res[0]);
       }
     });

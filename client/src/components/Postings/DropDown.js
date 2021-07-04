@@ -15,10 +15,19 @@ const DropDown = ({ title, options, selected, setSelected }) => {
 
     const toggleMenu = () => { setShowMenu(!showMenu) }
 
+    const displayString = str => {
+        const arr = str.split(" ");
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+
+        }
+        return arr.join(" ");
+    }
+
     return (
         <div className='dropdown'>
             <button className={`btn ${showMenu ? 'selected' : ''}`} onClick={toggleMenu}>
-                {selected === null ? title : selected}
+                {displayString(selected === null ? title : selected)}
             </button>
             {showMenu &&
                 <div className='dropdown-content'>
@@ -27,7 +36,7 @@ const DropDown = ({ title, options, selected, setSelected }) => {
                         (<div key={key} id={key}
                             className={selected === option ? 'selected' : null}
                             onClick={selectOption}>
-                            {option}
+                            {displayString(option)}
                         </div>))
                     }
                 </div>
