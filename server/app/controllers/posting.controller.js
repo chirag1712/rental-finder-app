@@ -88,7 +88,7 @@ const indexPostings = async (request, response) => {
 		const postings = await Posting.getPostings(request.body)
 
 		let next = false;
-		if (postings.length > 21) {
+		if (postings.length > 4) {
 			postings.pop();
 			next = true;
 		}

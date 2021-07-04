@@ -23,9 +23,10 @@ const Postings = () => {
         next: true
     });
 
-    const getPostings = async () => {
+    const getPostings = async (page) => {
         let data = { ...filterInfo };
-        // console.log(data);
+        data.page = page;
+        setFilterInfo(data)
         try {
             const response = await axios.post('api/postings/index', data);
             setPostings(response.data);
@@ -34,7 +35,7 @@ const Postings = () => {
         }
     }
 
-    useEffect(() => { getPostings(); }, []);
+    useEffect(() => { getPostings(0); }, []);
 
     const setFilters = (title, option) => {
         let field = title
@@ -46,20 +47,14 @@ const Postings = () => {
     const onChange = e => setFilterInfo({ ...filterInfo, keyword: e.target.value })
 
     const changePage = async (e) => {
-        let pg = e.target.id;
-        let data = { ...filterInfo };
+        let direction = e.target.id;
+        let page = filterInfo.page
 
-        if ('next' === pg && postings.next) data.page += 1;
-        else if ('prev' === pg && data.page !== 0) data.page -= 1;
+        if ('next' === direction && postings.next) page += 1;
+        else if ('prev' === direction && page !== 0) page -= 1;
         else return;
 
-        setFilterInfo(data)
-        try {
-            const response = await axios.post('api/postings/index', data);
-            setPostings(response.data);
-        } catch (err) {
-            // console.log(err.response);
-        }
+        getPostings(page)
     }
 
     return (
@@ -70,7 +65,7 @@ const Postings = () => {
                 <DropDown title='rooms' options={['1', '2', '3', '4', '5', '6']} selected={filterInfo.rooms} setSelected={setFilters} />
                 <DropDown title='gender' options={['male', 'female', 'co-ed']} selected={filterInfo.gender} setSelected={setFilters} />
                 <input className='input' type='search' placeholder='Keywords' onChange={onChange} />
-                <button className='btn apply' onClick={getPostings}>Apply</button>
+                <button className='btn apply' onClick={e => getPostings(0)}>Apply</button>
             </div>
             <div className='postingGrid'>
                 {postings.list.map((p) => <PostingCell key={p.id} id={p.id} imgURL={imgURL} address={p.address} price={p.price} />)}
@@ -80,7 +75,7 @@ const Postings = () => {
                             <button id='prev' className={`btn prev ${filterInfo.page === 0 && 'disable'}`} onClick={changePage}>Previous</button>
                             <button id='next' className={`btn next ${!postings.next && 'disable'}`} onClick={changePage}>Next</button>
                         </> :
-                        <h1>No Postings Available for the Given Filters</h1>}
+                        <h1>No Postings Available</h1>}
                 </div>
             </div>
         </div>

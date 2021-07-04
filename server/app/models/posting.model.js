@@ -72,7 +72,7 @@ Posting.getPostings = filterInfo => {
 		FROM Posting NATURAL JOIN AddressOf NATURAL JOIN Address
 		${filter.length > 6 ? filter : ''}
 		ORDER BY ${sortStatement}
-		Limit ${page * 20}, 21`;
+		Limit ${page * 4}, 5`;
 
 	// console.log(query)
 
