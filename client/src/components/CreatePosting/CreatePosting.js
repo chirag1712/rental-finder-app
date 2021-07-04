@@ -20,7 +20,12 @@ const CreatePosting = ({ user_id, setUserId }) => {
     street_num: '',
     street_name: '',
     city: '',
-    postal_code: ''
+    postal_code: '',
+    ac: '',
+    washrooms: '',
+    wifi: '',
+    parking: '',
+    laundry: '',
   });
 
   const handleChange = e => setInfo({ ...info, [e.target.name]: e.target.value })
@@ -61,28 +66,28 @@ const CreatePosting = ({ user_id, setUserId }) => {
 
   const acOptions = [
     { value: 'ac', label: "Is there A/C", isdisabled: true },
-    { value: 'yes_ac', label: 'Yes' },
-    { value: 'no_ac', label: 'No' }
+    { value: 'true', label: 'Yes' },
+    { value: 'false', label: 'No' }
   ]
 
   const parkingOptions = [
     { value: 'parking_options', label: "Is there Parking?", isdisabled: true },
-    { value: 'yes_parking', label: 'Yes' },
-    { value: 'no_parking', label: 'No' }
+    { value: 'true', label: 'Yes' },
+    { value: 'false', label: 'No' }
   ]
 
   const wifiOptions = [
     { value: 'wifi_options', label: "Wifi Options", isdisabled: true },
-    { value: 'included', label: 'Included' },
-    { value: 'not_included', label: 'Not Included' }
+    { value: 'true', label: 'Included' },
+    { value: 'false', label: 'Not Included' }
   ]
 
   const laundryStuff = [
     { value: 'laundry', label: "Laundry State", isdisabled: true },
-    { value: 'same_floor', label: 'Same Floor' },
+    { value: 'same-floor', label: 'Same Floor' },
     { value: 'common', label: 'In the Building' },
-    { value: 'in_suite', label: 'In Suite' },
-    { value: 'no_laundry', label: 'No Laundry' }
+    { value: 'ensuite', label: 'In Suite' },
+    { value: 'unavailable', label: 'No Laundry' }
   ]
 
   return (
@@ -153,8 +158,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
                 isOptionDisabled={(option) => option.isdisabled}
                 defaultValue={wifiOptions[0]}
                 options={wifiOptions}
-                name="wifi_options"
-                id="wifi_options"
+                name="wifi"
+                id="wifi"
                 onChange={handleChange} />
             </WrapperDiv>
             <WrapperDiv>
@@ -162,8 +167,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
                 isOptionDisabled={(option) => option.isdisabled}
                 defaultValue={parkingOptions[0]}
                 options={parkingOptions}
-                name="parking_options"
-                id="parking_options"
+                name="parking"
+                id="parking"
                 onChange={handleChange} />
             </WrapperDiv>
             <WrapperDiv>
@@ -171,8 +176,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
                 isOptionDisabled={(option) => option.isdisabled}
                 defaultValue={laundryStuff[0]}
                 options={laundryStuff}
-                name="laundry_options"
-                id="laundry_options"
+                name="laundry"
+                id="laundry"
                 onChange={handleChange} />
             </WrapperDiv>
             <TextArea rows="5" cols="60" name="description" onChange={handleChange}>
