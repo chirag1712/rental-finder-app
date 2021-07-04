@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
 import { WhiteBox, SelectBox, TextArea, Label, WrapperDiv } from './CreatePostingStyles.js';
 import logo from '../../images/HonkForSubletLogo.png'
+import axios from 'axios';
 
 const CreatePosting = ({ user_id, setUserId }) => {
 
@@ -30,7 +31,9 @@ const CreatePosting = ({ user_id, setUserId }) => {
     const data = { user_id, ...info };
 
     try {
+      const response = await axios.post('api/postings/create', data);
       alert('Successfully Made a Posting!');
+      // console.log(response.data);
     } catch (err) {
       alert('Error!');
       console.log(err.response.data);
