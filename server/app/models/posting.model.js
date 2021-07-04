@@ -63,9 +63,10 @@ Posting.getPostings = filterInfo => {
 		if (filter.length > 6) filter += ' AND ';
 		filter += `gender_details = '${gender}'`;
 	}
-	if (keywords != null) {
+	if (keywords != null && keywords !== '') {
 		if (filter.length > 6) filter += ' AND ';
 		filter += `MATCH (description) AGAINST('${keywords}')`;
+		filter += ` OR MATCH(street_num, street_name, building_name) AGAINST('${keywords}')`;
 	}
 
 	let sortStatement = 'updated_at DESC'
