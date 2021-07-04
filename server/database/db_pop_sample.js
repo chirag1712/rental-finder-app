@@ -166,9 +166,9 @@ function dateToTerm(startDate, numMonths) {
         [f, w, s]
     ];
     const numTerms = numMonths >= 9 ? 3 : Math.ceil(numMonths / 4);
-    const option = (1 <= startDate.getMonth() && startDate.getMonth() <= 4) ? 0 :
-        (5 <= startDate.getMonth() && startDate.getMonth() <= 8) ? 1 : 2;
-    return termMatrix[option].slice(0, numTerms).join(',');
+    const startTerm = (0 <= startDate.getMonth() && startDate.getMonth() <= 3) ? 0 :
+        (4 <= startDate.getMonth() && startDate.getMonth() <= 7) ? 1 : 2;
+    return termMatrix[startTerm].slice(0, numTerms).join(',');
 };
 
 function getEndDate(startDate, numMonths) {
