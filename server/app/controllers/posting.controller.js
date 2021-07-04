@@ -72,7 +72,7 @@ const create = async (request, response) => {
         }
 
         // posting photos handling
-        const files = request.files;
+        const files = request.files ? request.files : [];
         const s3FileUrl = process.env.AWS_UPLOADED_FILE_URL_LINK;
 
         const photo_ids = [];

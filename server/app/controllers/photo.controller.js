@@ -3,7 +3,7 @@ const uploadToS3 = require("../models/s3.js");
 
 // used to add photos for existing postings
 const upload = async (request, response) => {
-    const files = request.files
+    const files = request.files? request.files : [];
     const posting_id = request.body.posting_id
     const s3FileUrl = process.env.AWS_UPLOADED_FILE_URL_LINK;
 
