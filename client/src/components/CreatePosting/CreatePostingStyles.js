@@ -73,3 +73,14 @@ export const Label = styled.label`
   font-size: 1.2em;
   color:#666666;
 `;
+
+export const SelectBox = styled.select`
+  width: 357px;
+  font-size: 1.2rem;
+  color: #808080;
+  background-color: transparent;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 6px;
+  border-radius: 5px;
+`;
