@@ -4,7 +4,7 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const Cluster = require('./my-puppeteer-cluster/Cluster.js').default;
 const https = require('https');
-const bcrypt = require('bcrypt');
+const { encryptPassword } = require('../app/controllers/user.controller.js');
 const User = require('../app/models/user.model.js');
 const { Posting, Address, AddressOf } = require('../app/models/posting.model.js');
 
@@ -78,6 +78,39 @@ async function fb_scraper() {
   }
 };
 
+function dbFindAddress(address) {
+  return new Promise((resolve, reject) => {
+    var query = "SELECT * FROM Address WHERE city = ? AND street_name = ? AND street_num = ?";
+    sql.query(query, [address.city, address.street_name, address.street_num], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        reject(err);
+      } else {
+        console.log("address from db: ", res);
+        resolve(res);
+      }
+    }
+    );
+  });
+};
+
+function getPostalCode(street_num, street_name, city, myConsole = console) {
+  return new Promise(async resolve => {
+    const existingAddress = await dbFindAddress({ street_num, street_name, city });
+    if (existingAddress[0]) { // check for existing address in database
+      resolve({ existingAddress: existingAddress[0], postal_code: existingAddress[0].postal_code });
+      return;
+    }
+    try { // lookup postal code for new address
+      const postal_code = await getPostalCodeAPI(street_num, street_name, city, myConsole);
+      resolve({ existingAddress: null, postal_code });
+    } catch (error) { // return null postal code as last resort
+      myConsole.error(error);
+      resolve({ existingAddress: null, postal_code: null });
+    }
+  });
+};
+
 async function getFakeUser(myConsole = console) {
   const data = await new Promise((resolve, reject) => {
     const options = { hostname: 'randomuser.me', port: 443, path: '/api/', method: 'GET' };
@@ -106,8 +139,7 @@ async function getFakeUser(myConsole = console) {
   const first_name = data.results[0].name.first;
   const last_name = data.results[0].name.last;
   const email = data.results[0].email.replace(/@.*/, '@uwaterloo.ca');
-  const salt = await bcrypt.genSalt(10);
-  const password = await bcrypt.hash(data.results[0].login.password, salt);
+  const password = await encryptPassword(data.results[0].login.password);
   return { email, password, first_name, last_name };
 };
 
@@ -126,18 +158,28 @@ async function getUser(myConsole = console) {
   }
 }
 
-function dateToTerm(startDate, duration) {
+function dateToTerm(startDate, numMonths) {
   const w = 'winter', s = 'spring', f = 'fall';
   const termMatrix = [
     [w, s, f],
     [s, f, w],
     [f, w, s]
   ];
-  const numTerms = duration >= 9 ? 3 : Math.ceil(duration / 4);
+  const numTerms = numMonths >= 9 ? 3 : Math.ceil(numMonths / 4);
   const option = (1 <= startDate.getMonth() && startDate.getMonth() <= 4) ? 0 :
     (5 <= startDate.getMonth() && startDate.getMonth() <= 8) ? 1 : 2;
   return termMatrix[option].slice(0, numTerms).join(',');
 };
+
+function getEndDate(startDate, numMonths) {
+  const date = new Date(startDate);
+  const day = date.getDate();
+    date.setMonth(date.getMonth() + numMonths);
+    if (date.getDate() != day) { // day overflow
+      date.setDate(0);
+    }
+    return date;
+}
 
 function parseGender(gender) {
   if (gender.toLowerCase() === 'male only') return 'male';
@@ -146,37 +188,23 @@ function parseGender(gender) {
   else throw 'unhandled gender';
 };
 
-function dbFindAddress(address) {
-  return new Promise((resolve, reject) => {
-    var query = "SELECT * FROM Address WHERE city = ? AND street_name = ? AND street_num = ?";
-    sql.query(query, [address.city, address.street_name, address.street_num], (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        reject(err);
-      } else {
-        console.log("address from db: ", res);
-        resolve(res);
-      }
-    }
-    );
-  });
-};
+function generateTotalRooms(rooms_available) {
+  if (rooms_available > 4) return rooms_available;
+  return Math.floor(Math.random() * (6 - rooms_available) + rooms_available);
+}
 
-function getPostalCode(street_num, street_name, city, myConsole = console) {
-  return new Promise(async resolve => {
-    const existingAddress = await dbFindAddress({ street_num, street_name, city });
-    if (existingAddress[0]) { // check for existing address in database
-      resolve({ existingAddress: existingAddress[0], postal_code: existingAddress[0].postal_code });
-      return;
-    }
-    try { // lookup postal code for new address
-      const postal_code = await getPostalCodeAPI(street_num, street_name, city, myConsole);
-      resolve({ existingAddress: null, postal_code });
-    } catch (error) { // return null postal code as last resort
-      resolve({ existingAddress: null, postal_code: null });
-    }
-  });
-};
+function generateDatetime(dateStr) {
+  const hours = Math.floor(Math.random() * 20 + 6) % 24;
+  const minutes = Math.floor(Math.random() * 60);
+  const seconds = Math.floor(Math.random() * 60);
+  const date = new Date(dateStr);
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds);
+  return date.toISOString()
+    .replace(/T/, ' ')
+    .replace(/\..+/, '');
+}
 
 async function cleanData(data, myConsole = console) {
   // TODO: address validation
@@ -191,16 +219,19 @@ async function cleanData(data, myConsole = console) {
   const user_id = await getUser(myConsole);
   const startDate = new Date(data.start_date);
   const duration = parseInt(data.duration.replace(/(^\d+)(.+$)/i, '$1'));
-  const endDate = new Date(startDate.setMonth(startDate.getMonth() + duration));
-  const created_at = new Date(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  const endDate = getEndDate(startDate, duration);
+  const rooms_available = parseInt(data.rooms_available);
+  const created_at = generateDatetime(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]);
   const posting = new Posting({
     user_id,
     term: dateToTerm(startDate, duration),
     start_date: startDate.toISOString().replace(/T.*/, ''),
     end_date: endDate.toISOString().replace(/T.*/, ''),
+    pop: Math.floor(Math.random() * 20),
     price_per_month: parseFloat(data.price.match(/\d+(\.\d\d)?/)[0]),
     gender_details: parseGender(data.gender),
-    rooms_available: parseInt(data.rooms_available),
+    rooms_available,
+    total_rooms: generateTotalRooms(rooms_available),
     description: data.description,
     created_at,
     updated_at: created_at

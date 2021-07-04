@@ -10,6 +10,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
     term: '',
     start_date: '',
     end_date: '',
+    pop: 0,
     price_per_month: '',
     gender_details: '',
     rooms_available: '',
