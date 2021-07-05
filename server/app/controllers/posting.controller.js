@@ -48,7 +48,7 @@ const create = async (request, response) => {
         // validate that user exists in the db
         const user = await Posting.userCheck(request.body.user_id)
         if (!user) {
-            return result.status(400).json({ error: "User doesn't exist." });
+            return response.status(400).json({ error: "User doesn't exist." });
         }
 
         // Save Posting in the database
@@ -95,10 +95,10 @@ const create = async (request, response) => {
         posting.photo_ids = photo_ids;
         console.log("photo_ids for posting = ", photo_ids);
 
-        return result.status(200).json(posting);
+        return response.status(200).json(posting);
     } catch (err) {
         console.log(err);
-        return result.status(500).send({ error: "Internal server Error" })
+        return response.status(500).send({ error: "Internal server Error" })
     }
 };
 

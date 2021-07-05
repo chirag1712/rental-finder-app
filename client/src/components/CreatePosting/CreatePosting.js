@@ -1,6 +1,5 @@
-import { useState, Fragment } from 'react';
+import { useState } from 'react';
 import Input from '../Landing/Input.js'
-import Select from 'react-select'
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
 import { WhiteBox, SelectBox, TextArea, Label, WrapperDiv } from './CreatePostingStyles.js';
 import logo from '../../images/HonkForSubletLogo.png'
@@ -30,6 +29,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
 
     const handleChange = e => setInfo({ ...info, [e.target.name]: e.target.value });
 
+    // TODO: this might be the way to fix the true false hack
     // const handleChange = (e) => {
     //     let updatedValue = e.target.value;
 
