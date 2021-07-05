@@ -49,6 +49,24 @@ Posting.userCheck = userId => {
     });
 }
 
+Posting.getSinglePosting = id => {
+    const query = `SELECT p.*, a.*, ph.url
+    FROM Posting AS p
+    NATURAL JOIN User AS u
+    NATURAL JOIN AddressOf AS ao
+    NATURAL JOIN Address AS a
+    LEFT OUTER JOIN PostingPhoto AS ph 
+    ON p.posting_id = ph.posting_id
+    WHERE p.posting_id = ${id}`;
+
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            if (err) reject(err);
+            else resolve(res);
+        });
+    })
+}
+
 Posting.getPostings = filterInfo => {
 
     const { sort, term, rooms, gender, keywords, page } = filterInfo;
@@ -65,12 +83,14 @@ Posting.getPostings = filterInfo => {
     }
     if (keywords != null && keywords !== '') {
         if (filter.length > 6) filter += ' AND ';
-        filter += `MATCH (description) AGAINST('${keywords}') OR MATCH(street_num, street_name, building_name) AGAINST('${keywords}')`;
+        filter += `MATCH (description) AGAINST('${keywords}') OR 
+                   MATCH(street_num, street_name, building_name) AGAINST('${keywords}')`;
     }
 
-    let sortStatement = 'updated_at DESC'
-    if (sort === 'popularity') sortStatement = 'pop DESC';
-    else if (sort === 'price') sortStatement = 'price_per_month ASC';
+    let sortStatement = '';
+    if (sort === 'popularity') sortStatement = 'pop DESC, ';
+    else if (sort === 'price') sortStatement = 'price_per_month ASC, ';
+    sortStatement += 'updated_at DESC';
 
     const query =
         `SELECT posting_id AS id, price_per_month AS price, 
