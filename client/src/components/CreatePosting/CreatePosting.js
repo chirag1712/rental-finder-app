@@ -1,67 +1,33 @@
-import { useState, Fragment } from 'react';
+import { useRef } from 'react';
 import Input from '../Landing/Input.js'
-import Select from 'react-select'
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
 import { WhiteBox, SelectBox, TextArea, Label, WrapperDiv } from './CreatePostingStyles.js';
 import logo from '../../images/HonkForSubletLogo.png'
 import axios from 'axios';
 
 const CreatePosting = ({ user_id, setUserId }) => {
-
-    const [info, setInfo] = useState({
-        term: '',
-        start_date: '',
-        end_date: '',
-        pop: 0,
-        price_per_month: '',
-        gender_details: '',
-        rooms_available: '',
-        total_rooms: '',
-        description: '',
-        street_num: '',
-        street_name: '',
-        city: '',
-        postal_code: '',
-        ac: null,
-        washrooms: '',
-        wifi: null,
-        parking: null,
-        laundry: '',
-    });
-
-    const handleChange = e => setInfo({ ...info, [e.target.name]: e.target.value });
-
-    // const handleChange = (e) => {
-    //     let updatedValue = e.target.value;
-
-    //     if (updatedValue === "true" || updatedValue === "false") {
-    //         updatedValue = JSON.parse(updatedValue);
-    //     }
-    //     const updatedItems = {
-    //         ...info,
-    //         [e.target.name]: e.target.value
-    //     }
-    //     this.info.setInfo(this.info, updatedItems);
-    // }
-
-    const format = str => {
-        if ('true' === str) return true
-        if ('false' === str) return false
-        if (!str) return null
-    }
+    const form = useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const data = { user_id, ...info };
-        data.ac = format(data.ac)
-        data.parking = format(data.parking);
-        data.wifi = format(data.wifi);
+        const data = new FormData(form.current);
+        data.set('user_id', user_id);
+        data.set('pop', 0);
+
+        var files = document.getElementById('fileItem').files;
+        for (let i = 0; i < files.length; i++) {
+            data.append(i, files[i])
+        }
+
+        const config = {
+            headers: { 'content-type': 'multipart/form-data' }
+        }
 
         try {
-            const response = await axios.post('api/postings/create', data);
+            const response = await axios.post('api/postings/create', data, config);
             alert('Successfully Made a Posting!');
-            console.log(response.data);
+            // console.log(response.data);
         } catch (err) {
             alert('Error!');
             // console.log(err.response.data);
@@ -73,6 +39,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
         localStorage.clear();
     }
 
+    const handleChange = () => { }
+
     return (
         <Wrapper>
             <WrapperDiv>
@@ -82,16 +50,16 @@ const CreatePosting = ({ user_id, setUserId }) => {
                     <Header> Create Posting! </Header>
                     <Margin50></Margin50>
 
-                    <form action="" onSubmit={handleSubmit}>
-                        <Input name='street_num' type='number' onChange={handleChange} placeHolder='Street Number' />
+                    <form action="" ref={form} onSubmit={handleSubmit}>
+                        <Input name='street_num' type='number' placeHolder='Street Number' onChange={handleChange} />
                         <br></br>
-                        <Input name='street_name' type='text' onChange={handleChange} placeHolder='Street Name' />
-                        <br></br>
-
-                        <Input name='city' type='text' onChange={handleChange} placeHolder='City' />
+                        <Input name='street_name' type='text' placeHolder='Street Name' onChange={handleChange} />
                         <br></br>
 
-                        <Input name='postal_code' type='text' onChange={handleChange} placeHolder='Postal Code' />
+                        <Input name='city' type='text' placeHolder='City' onChange={handleChange} />
+                        <br></br>
+
+                        <Input name='postal_code' type='text' placeHolder='Postal Code' onChange={handleChange} />
                         <WrapperDiv>
                             <SelectBox name="term" id="term" onChange={handleChange}>
                                 <option value="" disabled selected>Choose Your Term</option>
@@ -109,7 +77,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                             min="2021-05-01" max="2022-08-31" onChange={handleChange}></input>
                         <br></br>
 
-                        <Input name='price_per_month' type='number' onChange={handleChange} placeHolder='Price Per Month' />
+                        <Input name='price_per_month' type='number' placeHolder='Price Per Month' onChange={handleChange} />
                         <WrapperDiv>
                             <SelectBox name="gender_details" id="gender_details" onChange={handleChange}>
                                 <option value="" disabled selected>Who Can Live Here?</option>
@@ -118,19 +86,19 @@ const CreatePosting = ({ user_id, setUserId }) => {
                                 <option value="co-ed">Co-ed</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='rooms_available' type='number' onChange={handleChange} placeHolder='Number of Rooms Available' />
+                        <Input name='rooms_available' type='number' placeHolder='Number of Rooms Available' onChange={handleChange} />
                         <br></br>
-                        <Input name='total_rooms' type='number' onChange={handleChange} placeHolder='Number of Rooms Total' />
+                        <Input name='total_rooms' type='number' placeHolder='Number of Rooms Total' onChange={handleChange} />
                         <br></br>
 
                         <WrapperDiv>
                             <SelectBox name="ac" id="ac" onChange={handleChange}>
                                 <option value="" disabled selected>Is there A/C</option>
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
+                                <option value={true}>Yes</option>
+                                <option value={false}>No</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='washrooms' type='number' onChange={handleChange} placeHolder='Total Number of Washrooms' />
+                        <Input name='washrooms' type='number' placeHolder='Total Number of Washrooms' onChange={handleChange} />
                         <br></br>
                         <WrapperDiv>
                             <SelectBox name="wifi" id="wifi" onChange={handleChange}>
@@ -158,6 +126,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                         <TextArea rows="5" cols="60" name="description" onChange={handleChange}>
                             Enter Description Here...
                         </TextArea>
+                        <input id="fileItem" type="file" multiple onChange={handleChange}></input>
                         <Margin50></Margin50>
                         <GreenButton type="submit" value="submit"> Submit </GreenButton>
                     </form>
