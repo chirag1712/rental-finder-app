@@ -13,7 +13,6 @@ const CreatePosting = ({ user_id, setUserId }) => {
 
         const data = new FormData(form.current);
         data.set('user_id', user_id);
-        data.set('pop', 0);
 
         var files = document.getElementById('fileItem').files;
         for (let i = 0; i < files.length; i++) {
