@@ -11,13 +11,13 @@ const ShowSinglePosting = () => {
     const pathId = pathName.slice(9);
 
     const getInfo = () => {
-        axios.get('/api/postings/posting/'+ pathId)
-        .then (response => {
-            const info = response.data;
-            setInfo(info[0]);
-            console.log(info[0]);
-        })
-        .catch (error => console.error(`Error: ${error}`));
+        axios.get('/api/postings/posting/' + pathId)
+            .then(response => {
+                const info = response.data;
+                setInfo(info[0]);
+                console.log(info[0]);
+            })
+            .catch(error => console.error(`Error: ${error}`));
     }
 
     useEffect(() => {
@@ -30,6 +30,25 @@ const ShowSinglePosting = () => {
         }
         return date;
     }
+
+    const convertBoolean = (num) => {
+        if (num === 0) {
+            return "Not Included"
+        }
+        return "Included";
+    }
+
+    const getLaundry = (str) => {
+        if (str === "same-floor") {
+            return "Same Floor"
+        } else if (str === "common") {
+            return "In the Building";
+        } else if (str === "ensuite") {
+            return "In the Suite";
+        }
+        return "Not Available";
+    }
+
 
     return (
         <PostingWrapper>
@@ -46,9 +65,10 @@ const ShowSinglePosting = () => {
                 <DetailsText> Term: {info.term} </DetailsText>
                 <DetailsText> Number of Rooms Available: {info.rooms_available} </DetailsText>
                 <DetailsText> Gender Details: {info.gender_details} </DetailsText>
-                <DetailsText> A/C: {info.ac} </DetailsText>
-                <DetailsText> Parking: {info.parking} </DetailsText>
-                <DetailsText> Laundry: {info.laundry} </DetailsText>
+                <DetailsText> A/C: {convertBoolean(info.ac)} </DetailsText>
+                <DetailsText> Parking: {convertBoolean(info.parking)} </DetailsText>
+                <DetailsText> Wifi: {convertBoolean(info.wifi)} </DetailsText>
+                <DetailsText> Laundry: {getLaundry(info.laundry)} </DetailsText>
             </DetailsDiv>
             <DescriptionDiv>
                 <PriceText> Description </PriceText>

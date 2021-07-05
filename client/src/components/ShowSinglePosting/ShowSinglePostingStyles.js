@@ -48,7 +48,7 @@ export const DescriptionDiv = styled.div`
   width: 900px;
   height: 214px;
   left: 250px;
-  top: 550px;
+  top: 570px;
   text-align: left;
 `;
 
