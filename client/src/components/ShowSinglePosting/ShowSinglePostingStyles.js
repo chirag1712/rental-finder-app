@@ -12,7 +12,7 @@ export const ImageDiv = styled.div`
   position: absolute;
   width: 518px;
   height: 457px;
-  left: 114px;
+  left: 250px;
   top: 155px;
   background-color: white;
 `;
@@ -45,10 +45,17 @@ export const DetailsDiv = styled.div`
 
 export const DescriptionDiv = styled.div`
   position: absolute;
-  width: 587px;
+  width: 900px;
   height: 214px;
-  left: 745px;
-  top: 629px;
+  left: 250px;
+  top: 550px;
+  text-align: left;
+`;
+
+export const DescriptionText = styled.label`
+  margin-top: 10px;
+  width: 900px;
+  height: 200px;
 `;
 
 export const PriceText = styled.label`
@@ -62,7 +69,7 @@ export const PriceText = styled.label`
 `;
 
 export const DetailsText = styled.label`
-  margin-top: 25px;
+  margin-top: 15px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;

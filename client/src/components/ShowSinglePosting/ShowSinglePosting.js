@@ -1,46 +1,55 @@
 import { useEffect, useState } from 'react';
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
-import { PostingWrapper, ImageDiv, UserInfoDiv, UserText, DetailsDiv, DetailsText, PriceText, DescriptionDiv } from './ShowSinglePostingStyles';
-import { useHistory } from "react-router-dom";
-
-import imgURL from '../Postings/test.jpg'
+import { PostingWrapper, ImageDiv, DetailsDiv, DetailsText, PriceText, DescriptionDiv, DescriptionText } from './ShowSinglePostingStyles';
 import axios from 'axios';
+import imgURL from '../Postings/test.jpg'
 
-const ShowSinglePosting = (user_id) => {
-    let [info, setInfo] = useState('');
-    useEffect(() => {
-        axios.get('api/postings/posting/1').then (response => {
-            setInfo(response.data);
-            console.log(response.data);
+const ShowSinglePosting = () => {
+    const [info, setInfo] = useState('');
+
+    //console.log(useParams());
+
+    const getInfo = () => {
+        axios.get('api/postings/posting/1')
+        .then (response => {
+            const info = response.data;
+            setInfo(info[0]);
+            console.log(info[0]);
         })
-    });
+        .catch (error => console.error(`Error: ${error}`));
+    }
+
+    useEffect(() => {
+        getInfo();
+    }, []);
+
+    const getDate = (date) => {
+        //const splicedDate = date.slice(0, 10);
+        return date;
+    }
 
     return (
         <PostingWrapper>
             <Margin50></Margin50>
-            <Header> Address </Header>
+            <Header> {info.street_num} {info.street_name}, {info.city}, {info.postal_code} </Header>
             <ImageDiv>
                 <img className='image' src={imgURL} />
             </ImageDiv>
-            <UserInfoDiv>
-                <UserText> Name </UserText>
-                <UserText> Email </UserText>
-            </UserInfoDiv>
             <DetailsDiv>
-                <PriceText> $ Price / Month </PriceText>
-                <DetailsText> # Bedrooms + # Washrooms</DetailsText>
-                <DetailsText> Start Date: </DetailsText>
-                <DetailsText> End Date: </DetailsText>
-                <DetailsText> Term: </DetailsText>
-                <DetailsText> Number of Rooms Available:  </DetailsText>
-                <DetailsText> Gender Details:  </DetailsText>
-                <DetailsText> A/C:  </DetailsText>
-                <DetailsText> Parking:  </DetailsText>
-                <DetailsText> Laundry:  </DetailsText>
+                <PriceText> ${info.price_per_month} / Month </PriceText>
+                <DetailsText> {info.total_rooms} Bedrooms + {info.washrooms} Washrooms</DetailsText>
+                <DetailsText> Start Date: {getDate(info.start_date)}</DetailsText>
+                <DetailsText> End Date: {getDate(info.end_date)}</DetailsText>
+                <DetailsText> Term: {info.term} </DetailsText>
+                <DetailsText> Number of Rooms Available: {info.rooms_available} </DetailsText>
+                <DetailsText> Gender Details: {info.gender_details} </DetailsText>
+                <DetailsText> A/C: {info.ac} </DetailsText>
+                <DetailsText> Parking: {info.parking} </DetailsText>
+                <DetailsText> Laundry: {info.laundry} </DetailsText>
             </DetailsDiv>
             <DescriptionDiv>
                 <PriceText> Description </PriceText>
-                <DetailsText> Description </DetailsText>
+                <DescriptionText> {info.description} </DescriptionText>
             </DescriptionDiv>
         </PostingWrapper>
     );
