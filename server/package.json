@@ -28,11 +28,13 @@
   },
   "homepage": "https://github.com/chirag1712/cs348-project#readme",
   "dependencies": {
+    "aws-sdk": "^2.939.0",
     "bcrypt": "^5.0.1",
     "concurrently": "^6.1.0",
     "express": "^4.17.1",
     "express-validator": "^6.11.1",
     "moment": "^2.29.1",
+    "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
     "puppeteer": "^10.1.0"

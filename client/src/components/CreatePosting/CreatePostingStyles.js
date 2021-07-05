@@ -54,11 +54,11 @@ export const TextArea = styled.textarea`
   margin: auto;
   margin-top: 15px;
   margin-bottom: 15px;
-  object-fit: contain;
   border-radius: 10px;
   font-family: 'Roboto';
   font-size: 16px;
   color:#808080;
+  display: block;
 `;
 
 
