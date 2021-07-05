@@ -1,5 +1,6 @@
-import { AppDiv } from './styles/AppStyles.js';
 import './styles/index.css';
+import { AppDiv } from './styles/AppStyles.js';
+import ShowSinglePosting from './components/ShowSinglePosting/ShowSinglePosting';
 import Landing from './components/Landing/Landing';
 import Postings from './components/Postings/Postings';
 import CreatePosting from './components/CreatePosting/CreatePosting';
@@ -25,6 +26,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={() => <Landing setUserId={setUserId} />} />
           <Route path="/postings" exact component={() => <Postings />} />
+          <Route path="/posting/:id" exact component={() => <ShowSinglePosting />} />
           <PrivateRoute path="/createPosting" render={() => <CreatePosting user_id={userId} setUserId={setUserId} />} />
         </Switch>
       </Router>

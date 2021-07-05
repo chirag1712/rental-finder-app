@@ -5,6 +5,7 @@ const uploadToS3 = require("../models/s3.js");
 
 //express validator
 const { check, validationResult } = require("express-validator");
+const { query } = require('../models/db.js');
 
 const format = str => {
     if ('true' === str) return true
@@ -137,8 +138,26 @@ const indexPostings = async (request, response) => {
     }
 }
 
+const showPosting = async (request, response) => {
+	const id = request.params.id
+
+	if (id == null) {
+		return response.status(400).json({ error: 'Invalid Error' });
+	}
+
+	try {
+        // TODO: also need to increment popularity for the posting 
+        // (only if the user trying to get it is not the posting creator)
+		const posting = await Posting.getSinglePosting(id);
+		response.status(200).json(posting);
+	} catch (err) {
+		return response.status(500).send({ error: 'Internal server Error' })
+	}
+}
+
 module.exports = {
-    create,
-    indexPostingsValidation,
-    indexPostings
+	create,
+	indexPostingsValidation,
+	indexPostings,
+	showPosting
 }

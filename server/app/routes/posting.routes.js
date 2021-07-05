@@ -13,4 +13,6 @@ router.post('/index', posting.indexPostingsValidation, posting.indexPostings)
 // create a new Posting
 router.post("/create", upload.any("file"), posting.create);
 
+router.get("/posting/:id", posting.showPosting)
+
 module.exports = router;
