@@ -11,6 +11,6 @@ var upload = multer({ storage: storage });
 router.post('/index', posting.indexPostingsValidation, posting.indexPostings)
 
 // create a new Posting
-router.post("/create", upload.array("file"), posting.create);
+router.post("/create", upload.any("file"), posting.create);
 
 module.exports = router;

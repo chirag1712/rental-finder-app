@@ -38,6 +38,8 @@ const CreatePosting = ({ user_id, setUserId }) => {
         localStorage.clear();
     }
 
+    const handleChange = () => { }
+
     return (
         <Wrapper>
             <WrapperDiv>
@@ -48,17 +50,17 @@ const CreatePosting = ({ user_id, setUserId }) => {
                     <Margin50></Margin50>
 
                     <form action="" ref={form} onSubmit={handleSubmit}>
-                        <Input name='street_num' type='number' placeHolder='Street Number' />
+                        <Input name='street_num' type='number' placeHolder='Street Number' onChange={handleChange} />
                         <br></br>
-                        <Input name='street_name' type='text' placeHolder='Street Name' />
-                        <br></br>
-
-                        <Input name='city' type='text' placeHolder='City' />
+                        <Input name='street_name' type='text' placeHolder='Street Name' onChange={handleChange} />
                         <br></br>
 
-                        <Input name='postal_code' type='text' placeHolder='Postal Code' />
+                        <Input name='city' type='text' placeHolder='City' onChange={handleChange} />
+                        <br></br>
+
+                        <Input name='postal_code' type='text' placeHolder='Postal Code' onChange={handleChange} />
                         <WrapperDiv>
-                            <SelectBox name="term" id="term">
+                            <SelectBox name="term" id="term" onChange={handleChange}>
                                 <option value="" disabled selected>Choose Your Term</option>
                                 <option value="fall">Fall</option>
                                 <option value="winter">Winter</option>
@@ -67,52 +69,52 @@ const CreatePosting = ({ user_id, setUserId }) => {
                         </WrapperDiv>
                         <Label for="start_date">Start Date: </Label>
                         <input type="date" id="start" name="start_date"
-                            min="2021-05-01" max="2022-08-31"></input>
+                            min="2021-05-01" max="2022-08-31" onChange={handleChange}></input>
                         <br></br>
                         <Label for="end_date">End Date: </Label>
                         <input type="date" id="end" name="end_date"
-                            min="2021-05-01" max="2022-08-31"></input>
+                            min="2021-05-01" max="2022-08-31" onChange={handleChange}></input>
                         <br></br>
 
-                        <Input name='price_per_month' type='number' placeHolder='Price Per Month' />
+                        <Input name='price_per_month' type='number' placeHolder='Price Per Month' onChange={handleChange} />
                         <WrapperDiv>
-                            <SelectBox name="gender_details" id="gender_details">
+                            <SelectBox name="gender_details" id="gender_details" onChange={handleChange}>
                                 <option value="" disabled selected>Who Can Live Here?</option>
                                 <option value="female">Female</option>
                                 <option value="male">Male</option>
                                 <option value="co-ed">Co-ed</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='rooms_available' type='number' placeHolder='Number of Rooms Available' />
+                        <Input name='rooms_available' type='number' placeHolder='Number of Rooms Available' onChange={handleChange} />
                         <br></br>
-                        <Input name='total_rooms' type='number' placeHolder='Number of Rooms Total' />
+                        <Input name='total_rooms' type='number' placeHolder='Number of Rooms Total' onChange={handleChange} />
                         <br></br>
 
                         <WrapperDiv>
-                            <SelectBox name="ac" id="ac">
+                            <SelectBox name="ac" id="ac" onChange={handleChange}>
                                 <option value="" disabled selected>Is there A/C</option>
                                 <option value={true}>Yes</option>
                                 <option value={false}>No</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <Input name='washrooms' type='number' placeHolder='Total Number of Washrooms' />
+                        <Input name='washrooms' type='number' placeHolder='Total Number of Washrooms' onChange={handleChange} />
                         <br></br>
                         <WrapperDiv>
-                            <SelectBox name="wifi" id="wifi">
+                            <SelectBox name="wifi" id="wifi" onChange={handleChange}>
                                 <option value="" disabled selected>Wifi Options</option>
                                 <option value="true" >Included</option>
                                 <option value="false">Not Included</option>
                             </SelectBox>
                         </WrapperDiv>
                         <WrapperDiv>
-                            <SelectBox name="parking" id="parking">
+                            <SelectBox name="parking" id="parking" onChange={handleChange}>
                                 <option value="" disabled selected>Is there Parking?</option>
                                 <option value="true">Included</option>
                                 <option value="false">Not Included</option>
                             </SelectBox>
                         </WrapperDiv>
                         <WrapperDiv>
-                            <SelectBox name="laundry" id="laundry">
+                            <SelectBox name="laundry" id="laundry" onChange={handleChange}>
                                 <option value="" disabled selected>Laundry Options</option>
                                 <option value="same-floor">Same Floor</option>
                                 <option value="common">In the Building</option>
@@ -120,10 +122,10 @@ const CreatePosting = ({ user_id, setUserId }) => {
                                 <option value="unavailable">No Laundry</option>
                             </SelectBox>
                         </WrapperDiv>
-                        <TextArea rows="5" cols="60" name="description">
+                        <TextArea rows="5" cols="60" name="description" onChange={handleChange}>
                             Enter Description Here...
                         </TextArea>
-                        <input id="fileItem" type="file" multiple></input>
+                        <input id="fileItem" type="file" multiple onChange={handleChange}></input>
                         <Margin50></Margin50>
                         <GreenButton type="submit" value="submit"> Submit </GreenButton>
                     </form>
