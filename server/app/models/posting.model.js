@@ -65,12 +65,14 @@ Posting.getPostings = filterInfo => {
     }
     if (keywords != null && keywords !== '') {
         if (filter.length > 6) filter += ' AND ';
-        filter += `MATCH (description) AGAINST('${keywords}') OR MATCH(street_num, street_name, building_name) AGAINST('${keywords}')`;
+        filter += `MATCH (description) AGAINST('${keywords}') OR 
+                   MATCH(street_num, street_name, building_name) AGAINST('${keywords}')`;
     }
 
-    let sortStatement = 'updated_at DESC'
-    if (sort === 'popularity') sortStatement = 'pop DESC';
-    else if (sort === 'price') sortStatement = 'price_per_month ASC';
+    let sortStatement = '';
+    if (sort === 'popularity') sortStatement = 'pop DESC, ';
+    else if (sort === 'price') sortStatement = 'price_per_month ASC, ';
+    sortStatement += 'updated_at DESC';
 
     const query =
         `SELECT posting_id AS id, price_per_month AS price, 
