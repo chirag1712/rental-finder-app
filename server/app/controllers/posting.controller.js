@@ -114,6 +114,8 @@ const showPosting = async (request, response) => {
 	}
 
 	try {
+        // TODO: also need to increment popularity for the posting 
+        // (only if the user trying to get it is not the posting creator)
 		const posting = await Posting.getSinglePosting(id);
 		response.status(200).json(posting);
 	} catch (err) {
