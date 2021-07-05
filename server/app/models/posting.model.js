@@ -49,22 +49,22 @@ Posting.userCheck = userId => {
     });
 }
 
-Posting.getSinglePosting = getPosting => {
-    const query = `SELECT p.*, a.*, ph.photo_id, ph.url
+Posting.getSinglePosting = id => {
+    const query = `SELECT p.*, a.*, ph.url
     FROM Posting AS p
+    NATURAL JOIN User AS u
     NATURAL JOIN AddressOf AS ao
     NATURAL JOIN Address AS a
-    LEFT OUTER JOIN PostingPhoto AS ph
+    LEFT OUTER JOIN PostingPhoto AS ph 
     ON p.posting_id = ph.posting_id
-    NATURAL JOIN User AS u
-    WHERE p.posting_id = 1;`;
+    WHERE p.posting_id = ${id}`;
 
     return new Promise((resolve, reject) => {
-		sql.query(query, (err, res) => {
-			if (err) reject(err);
-			else resolve(res);
-		});
-	})
+        sql.query(query, (err, res) => {
+            if (err) reject(err);
+            else resolve(res);
+        });
+    })
 }
 
 Posting.getPostings = filterInfo => {

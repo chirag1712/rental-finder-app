@@ -2,6 +2,7 @@ const moment = require('moment');
 const { Posting, Address, AddressOf } = require("../models/posting.model.js");
 //express validator
 const { check, validationResult } = require("express-validator");
+const { query } = require('../models/db.js');
 
 // Create a new posting
 const create = async (request, response) => {
@@ -13,25 +14,25 @@ const create = async (request, response) => {
 	}
 
 
-  // Create a Posting
-  const posting = new Posting({
-    user_id: request.body.user_id,
-    term: request.body.term,
-    start_date: request.body.start_date,
-    end_date: request.body.end_date,
-    price_per_month: request.body.price_per_month,
-    gender_details: request.body.gender_details,
-    rooms_available: request.body.rooms_available,
-    total_rooms: request.body.total_rooms,
-    ac: request.body.ac,
-    washrooms: request.body.washrooms,
-    wifi: request.body.wifi,
-    parking: request.body.parking,
-    laundry: request.body.laundry,
-    description: request.body.description,
-    created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-    updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-  });
+	// Create a Posting
+	const posting = new Posting({
+		user_id: request.body.user_id,
+		term: request.body.term,
+		start_date: request.body.start_date,
+		end_date: request.body.end_date,
+		price_per_month: request.body.price_per_month,
+		gender_details: request.body.gender_details,
+		rooms_available: request.body.rooms_available,
+		total_rooms: request.body.total_rooms,
+		ac: request.body.ac,
+		washrooms: request.body.washrooms,
+		wifi: request.body.wifi,
+		parking: request.body.parking,
+		laundry: request.body.laundry,
+		description: request.body.description,
+		created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+		updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+	});
 
 	// Create a Address (only if it doesn't exist)
 	const address = new Address({
@@ -105,8 +106,24 @@ const indexPostings = async (request, response) => {
 	}
 }
 
+const showPosting = async (request, response) => {
+	const id = request.params.id
+
+	if (id == null) {
+		return response.status(400).json({ error: 'Invalid Error' });
+	}
+
+	try {
+		const posting = await Posting.getSinglePosting(id);
+		response.status(200).json(posting);
+	} catch (err) {
+		return response.status(500).send({ error: 'Internal server Error' })
+	}
+}
+
 module.exports = {
 	create,
 	indexPostingsValidation,
-	indexPostings
+	indexPostings,
+	showPosting
 }

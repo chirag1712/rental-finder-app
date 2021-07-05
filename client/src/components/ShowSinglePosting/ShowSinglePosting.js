@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
-import { PostingWrapper, ImageDiv, UserInfoDiv, UserText, DetailsDiv, DetailsText, PriceText, DescriptionDiv} from './ShowSinglePostingStyles';
+import { PostingWrapper, ImageDiv, UserInfoDiv, UserText, DetailsDiv, DetailsText, PriceText, DescriptionDiv } from './ShowSinglePostingStyles';
 import { useHistory } from "react-router-dom";
 
-import imgURL from '../../images/HonkForSubletLogo.png'
+import imgURL from '../Postings/test.jpg'
+import axios from 'axios';
 
 const ShowSinglePosting = (user_id) => {
-    const getSinglePosting = async (page) => {
-        let data = [];
-        data.page = page
-    }
+    let [info, setInfo] = useState('');
+    useEffect(() => {
+        axios.get('api/postings/posting/1').then (response => {
+            setInfo(response.data);
+            console.log(response.data);
+        })
+    });
 
     return (
         <PostingWrapper>
@@ -35,8 +39,8 @@ const ShowSinglePosting = (user_id) => {
                 <DetailsText> Laundry:  </DetailsText>
             </DetailsDiv>
             <DescriptionDiv>
-            <PriceText> Description </PriceText>
-            <DetailsText> Description </DetailsText>
+                <PriceText> Description </PriceText>
+                <DetailsText> Description </DetailsText>
             </DescriptionDiv>
         </PostingWrapper>
     );

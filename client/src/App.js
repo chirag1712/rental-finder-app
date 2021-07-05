@@ -1,6 +1,6 @@
-import './styles/App.css'
-import './styles/index.css'
-import Landing from './components/Landing/Landing';
+import { AppDiv } from './styles/AppStyles.js';
+import Landing from './components/ShowSinglePosting/ShowSinglePosting';
+//import Landing from './components/Landing/Landing';
 import Postings from './components/Postings/Postings';
 import CreatePosting from './components/CreatePosting/CreatePosting';
 import PrivateRoute from './components/PrivateRoute';
