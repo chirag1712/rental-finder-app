@@ -113,7 +113,12 @@ function getPostalCode(street_num, street_name, city, myConsole = console) {
 
 async function getFakeUser(myConsole = console) {
   const data = await new Promise((resolve, reject) => {
-    const options = { hostname: 'randomuser.me', port: 443, path: '/api/', method: 'GET' };
+    const options = {
+      hostname: 'randomuser.me',
+      port: 443,
+      path: '/api/?inc=name,email,login',
+      method: 'GET'
+    };
     myConsole.log(`${options.method} ${options.hostname}${options.path}`);
     const req = https.request(options, res => {
       const all_chunks = [];
@@ -136,10 +141,10 @@ async function getFakeUser(myConsole = console) {
       });
     }).end();
   });
-  const first_name = data.results[0].name.first;
-  const last_name = data.results[0].name.last;
   const email = data.results[0].email.replace(/@.*/, '@uwaterloo.ca');
   const password = await encryptPassword(data.results[0].login.password);
+  const first_name = data.results[0].name.first;
+  const last_name = data.results[0].name.last;
   return { email, password, first_name, last_name };
 };
 
@@ -221,6 +226,7 @@ async function cleanData(data, myConsole = console) {
   const duration = parseInt(data.duration.replace(/(^\d+)(.+$)/i, '$1'));
   const endDate = getEndDate(startDate, duration);
   const rooms_available = parseInt(data.rooms_available);
+  const laundryOptions = ['ensuite', 'same-floor', 'common', 'unavailable'];
   const created_at = generateDatetime(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]);
   const posting = new Posting({
     user_id,
@@ -232,6 +238,11 @@ async function cleanData(data, myConsole = console) {
     gender_details: parseGender(data.gender),
     rooms_available,
     total_rooms: generateTotalRooms(rooms_available),
+    ac: data.description.toLowerCase().match(/(ac)|(air conditioning)/) ? true : false,
+    washrooms: parseInt(data.washrooms),
+    wifi: data.description.toLowerCase().match(/wifi/) ? true : false,
+    parking: data.description.toLowerCase().match(/parking/) ? true : false,
+    laundry: laundryOptions[Math.floor(Math.random() * 4)],
     description: data.description,
     created_at,
     updated_at: created_at
@@ -245,8 +256,8 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
   const myConsole = new console.Console(logStream, logStream);
   const {
     item_selector, start_date_selector, duration_selector, price_selector,
-    gender_selector, rooms_available_selector, description_selector,
-    created_at_selector, address_selector
+    gender_selector, rooms_available_selector, washrooms_selector,
+    description_selector, created_at_selector, address_selector
   } = selectors;
   try {
     await page.goto(url, { timeout });
@@ -276,8 +287,8 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
       const data = await newPage.evaluate(
         (
           start_date_selector, duration_selector, price_selector, gender_selector,
-          rooms_available_selector, description_selector, created_at_selector,
-          address_selector
+          rooms_available_selector, washrooms_selector, description_selector,
+          created_at_selector, address_selector
         ) => {
           return {
             start_date: document.querySelector(start_date_selector).innerText,
@@ -285,14 +296,15 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
             price: document.querySelectorAll(price_selector)[1].innerText,
             gender: document.querySelector(gender_selector).innerText,
             rooms_available: document.querySelector(rooms_available_selector).innerText,
+            washrooms: document.querySelector(washrooms_selector).innerText,
             description: document.querySelector(description_selector).innerText,
             created_at: document.querySelector(created_at_selector).innerText,
             address: document.querySelector(address_selector).innerText
           };
         },
         start_date_selector, duration_selector, price_selector, gender_selector,
-        rooms_available_selector, description_selector, created_at_selector,
-        address_selector
+        rooms_available_selector, washrooms_selector, description_selector,
+        created_at_selector, address_selector
       );
       myConsole.log(data);
       await newPage.close();
@@ -339,6 +351,7 @@ async function bamboo_scraper() {
       price_selector: '.ui.segment>h2.ui.header',
       gender_selector: '.man~.content>.description',
       rooms_available_selector: '.hashtag~.content>.description',
+      washrooms_selector: '.avatar~.content>.description',
       description_selector: '.listingdescription',
       created_at_selector: '.ui.segment>h4.ui.header',
       address_selector: 'h1.header'
