@@ -1,3 +1,4 @@
+import './styles/index.css';
 import { AppDiv } from './styles/AppStyles.js';
 import Landing from './components/ShowSinglePosting/ShowSinglePosting';
 //import Landing from './components/Landing/Landing';
