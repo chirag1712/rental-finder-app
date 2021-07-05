@@ -7,6 +7,7 @@ const https = require('https');
 const { encryptPassword } = require('../app/controllers/user.controller.js');
 const User = require('../app/models/user.model.js');
 const { Posting, Address, AddressOf } = require('../app/models/posting.model.js');
+const Photo = require('../app/models/photo.model.js');
 
 function deleteLogs() {
   const logsDirectory = 'database/logs';
@@ -257,7 +258,8 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
   const {
     item_selector, start_date_selector, duration_selector, price_selector,
     gender_selector, rooms_available_selector, washrooms_selector,
-    description_selector, created_at_selector, address_selector
+    description_selector, created_at_selector, address_selector,
+    preview_selector
   } = selectors;
   try {
     await page.goto(url, { timeout });
@@ -267,13 +269,13 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
     //save target of original page to know that this was the opener: 
     const pageTarget = page.target();
     const listLen = await page.evaluate(
-      sel => document.querySelector(sel).parentElement.parentElement.childElementCount,
+      item_selector => document.querySelector(item_selector).parentElement.parentElement.childElementCount,
       item_selector
     );
     myConsole.log(`Found ${listLen} items`);
     for (let index = 0; index < listLen; ++index) {
-      await page.evaluate((sel, ind) => {
-        const el = document.querySelectorAll(sel)[ind];
+      await page.evaluate((item_selector, ind) => {
+        const el = document.querySelectorAll(item_selector)[ind];
         el.click();
       }, item_selector, index);
       myConsole.log(`Item clicked`);
@@ -310,6 +312,7 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
       await newPage.close();
       myConsole.log(`Item page closed`);
 
+      // clean data
       let cleanedData = null;
       try {
         cleanedData = await cleanData(data, myConsole);
@@ -324,14 +327,31 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
           posting_id: newPosting.posting_id,
           address_id: existingAddress.address_id,
         });
-        AddressOf.create(addressOf);
+        await AddressOf.create(addressOf);
       } else {
         const newAddress = await Address.create(address);
         const addressOf = new AddressOf({
           posting_id: newPosting.posting_id,
           address_id: newAddress.address_id,
         });
-        AddressOf.create(addressOf);
+        await AddressOf.create(addressOf);
+      }
+
+      // get photos
+      const photos = await page.evaluate((preview_selector, ind) => {
+        const photos = [];
+        for (const el of document.querySelectorAll(preview_selector)[ind].children) {
+          photos.push(el.querySelector('img').src);
+        }
+        return photos;
+      }, preview_selector, index);
+      myConsole.log('Found photos:\n', photos);
+      // TODO: upload photos to S3
+      for (const photo_url of photos) {
+        await Photo.create(new Photo({
+          posting_id: newPosting.posting_id,
+          photo_url
+        }));
       }
     }
     myConsole.log(`Finished scraping page list ${pid}`);
@@ -354,7 +374,8 @@ async function bamboo_scraper() {
       washrooms_selector: '.avatar~.content>.description',
       description_selector: '.listingdescription',
       created_at_selector: '.ui.segment>h4.ui.header',
-      address_selector: 'h1.header'
+      address_selector: 'h1.header',
+      preview_selector: '.ui.items>.item .slider'
     };
     const timeout = 90000; // ms
     const cluster = await Cluster.launch({
