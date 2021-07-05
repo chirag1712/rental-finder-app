@@ -7,10 +7,11 @@ import imgURL from '../Postings/test.jpg'
 const ShowSinglePosting = () => {
     const [info, setInfo] = useState('');
 
-    //console.log(useParams());
+    const pathName = window.location.pathname;
+    const pathId = pathName.slice(9);
 
     const getInfo = () => {
-        axios.get('api/postings/posting/1')
+        axios.get('api/postings/posting/'+ pathId)
         .then (response => {
             const info = response.data;
             setInfo(info[0]);
