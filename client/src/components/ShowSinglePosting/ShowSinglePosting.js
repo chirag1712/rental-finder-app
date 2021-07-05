@@ -11,7 +11,7 @@ const ShowSinglePosting = () => {
     const pathId = pathName.slice(9);
 
     const getInfo = () => {
-        axios.get('api/postings/posting/'+ pathId)
+        axios.get('/api/postings/posting/'+ pathId)
         .then (response => {
             const info = response.data;
             setInfo(info[0]);
@@ -25,7 +25,9 @@ const ShowSinglePosting = () => {
     }, []);
 
     const getDate = (date) => {
-        //const splicedDate = date.slice(0, 10);
+        if (date) {
+            return date.slice(0, 10);
+        }
         return date;
     }
 
