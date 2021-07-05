@@ -6,6 +6,12 @@ const uploadToS3 = require("../models/s3.js");
 //express validator
 const { check, validationResult } = require("express-validator");
 
+const format = str => {
+    if ('true' === str) return true
+    if ('false' === str) return false
+    if (!str) return null
+}
+
 // Create a new posting
 const create = async (request, response) => {
     // Validate request
@@ -25,10 +31,10 @@ const create = async (request, response) => {
         gender_details: request.body.gender_details,
         rooms_available: request.body.rooms_available,
         total_rooms: request.body.total_rooms,
-        ac: request.body.ac,
         washrooms: request.body.washrooms,
-        wifi: request.body.wifi,
-        parking: request.body.parking,
+        ac: format(request.body.ac),
+        parking: format(request.body.parking),
+        wifi: format(request.body.wifi),
         laundry: request.body.laundry,
         description: request.body.description,
         created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
