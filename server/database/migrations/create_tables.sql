@@ -25,7 +25,7 @@ CREATE TABLE Posting(
   washrooms TINYINT CONSTRAINT washrooms_positive CHECK(washrooms >= 0),
   wifi BOOLEAN,
   parking BOOLEAN,
-  laundry ENUM('ensuite', 'same-floor', 'common','unavailable'),
+  laundry ENUM('ensuite', 'same-floor', 'common', 'unavailable'),
   description TEXT,
   created_at DATETIME NOT NULL,
   updated_at DATETIME NOT NULL,

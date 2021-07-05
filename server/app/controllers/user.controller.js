@@ -12,6 +12,11 @@ const signUpValidation = [
   check("password", "Minimum length of 8 required").isLength({ min: 8})
 ];
 
+async function encryptPassword(password) {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+}
+
 // signup a new User
 const signup = async (request, response) => {
   // Validate request
@@ -30,9 +35,7 @@ const signup = async (request, response) => {
       return response.status(400).json({ error: "User already exists" });
     }
 
-    // encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const e_password = await bcrypt.hash(password, salt);
+    const e_password = encryptPassword(password);
 
     // Create a User
     const user = new User({
@@ -92,6 +95,7 @@ const login = async (request, response) => {
 
 module.exports = {
   signUpValidation,
+  encryptPassword,
   signup,
   logInValidation,
   login

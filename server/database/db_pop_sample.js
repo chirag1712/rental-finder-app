@@ -4,9 +4,10 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const Cluster = require('./my-puppeteer-cluster/Cluster.js').default;
 const https = require('https');
-const bcrypt = require('bcrypt');
+const { encryptPassword } = require('../app/controllers/user.controller.js');
 const User = require('../app/models/user.model.js');
 const { Posting, Address, AddressOf } = require('../app/models/posting.model.js');
+const Photo = require('../app/models/photo.model.js');
 
 function deleteLogs() {
   const logsDirectory = 'database/logs';
@@ -78,74 +79,6 @@ async function fb_scraper() {
   }
 };
 
-async function getFakeUser(myConsole = console) {
-  const data = await new Promise((resolve, reject) => {
-    const options = { hostname: 'randomuser.me', port: 443, path: '/api/', method: 'GET' };
-    myConsole.log(`${options.method} ${options.hostname}${options.path}`);
-    const req = https.request(options, res => {
-      const all_chunks = [];
-      res.on('data', chunk => {
-        all_chunks.push(chunk);
-      });
-      res.on('end', () => {
-        try {
-          const body = Buffer.concat(all_chunks).toString();
-          myConsole.log(
-            `RETURNED STATUS ${res.statusCode}\nHEADERS:`,
-            res.headers,
-            '\nBODY:\n',
-            body
-          );
-          resolve(JSON.parse(body));
-        } catch (err) {
-          reject(err);
-        }
-      });
-    }).end();
-  });
-  const first_name = data.results[0].name.first;
-  const last_name = data.results[0].name.last;
-  const email = data.results[0].email.replace(/@.*/, '@uwaterloo.ca');
-  const salt = await bcrypt.genSalt(10);
-  const password = await bcrypt.hash(data.results[0].login.password, salt);
-  return { email, password, first_name, last_name };
-};
-
-async function getUser(myConsole = console) {
-  const newUser = await getFakeUser(myConsole); // consider scraping real profiles on Bamboo (need an account)
-  try {
-    // check for existing user
-    const { user_id } = await User.findOne(newUser.email);
-    const userPostings = await User.getPostings(user_id);
-    if (userPostings.length < 3) {
-      return user_id;
-    }
-    return await getUser(myConsole);
-  } catch (error) {
-    return await User.signup(newUser);
-  }
-}
-
-function dateToTerm(startDate, duration) {
-  const w = 'winter', s = 'spring', f = 'fall';
-  const termMatrix = [
-    [w, s, f],
-    [s, f, w],
-    [f, w, s]
-  ];
-  const numTerms = duration >= 9 ? 3 : Math.ceil(duration / 4);
-  const option = (1 <= startDate.getMonth() && startDate.getMonth() <= 4) ? 0 :
-    (5 <= startDate.getMonth() && startDate.getMonth() <= 8) ? 1 : 2;
-  return termMatrix[option].slice(0, numTerms).join(',');
-};
-
-function parseGender(gender) {
-  if (gender.toLowerCase() === 'male only') return 'male';
-  else if (gender.toLowerCase() === 'female only') return 'female';
-  else if (gender.toLowerCase().includes('coed')) return 'co-ed';
-  else throw 'unhandled gender';
-};
-
 function dbFindAddress(address) {
   return new Promise((resolve, reject) => {
     var query = "SELECT * FROM Address WHERE city = ? AND street_name = ? AND street_num = ?";
@@ -173,10 +106,111 @@ function getPostalCode(street_num, street_name, city, myConsole = console) {
       const postal_code = await getPostalCodeAPI(street_num, street_name, city, myConsole);
       resolve({ existingAddress: null, postal_code });
     } catch (error) { // return null postal code as last resort
+      myConsole.error(error);
       resolve({ existingAddress: null, postal_code: null });
     }
   });
 };
+
+async function getFakeUser(myConsole = console) {
+  const data = await new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'randomuser.me',
+      port: 443,
+      path: '/api/?inc=name,email,login',
+      method: 'GET'
+    };
+    myConsole.log(`${options.method} ${options.hostname}${options.path}`);
+    const req = https.request(options, res => {
+      const all_chunks = [];
+      res.on('data', chunk => {
+        all_chunks.push(chunk);
+      });
+      res.on('end', () => {
+        try {
+          const body = Buffer.concat(all_chunks).toString();
+          myConsole.log(
+            `RETURNED STATUS ${res.statusCode}\nHEADERS:`,
+            res.headers,
+            '\nBODY:\n',
+            body
+          );
+          resolve(JSON.parse(body));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }).end();
+  });
+  const email = data.results[0].email.replace(/@.*/, '@uwaterloo.ca');
+  const password = await encryptPassword(data.results[0].login.password);
+  const first_name = data.results[0].name.first;
+  const last_name = data.results[0].name.last;
+  return { email, password, first_name, last_name };
+};
+
+async function getUser(myConsole = console) {
+  const newUser = await getFakeUser(myConsole); // consider scraping real profiles on Bamboo (need an account)
+  try {
+    // check for existing user
+    const { user_id } = await User.findOne(newUser.email);
+    const userPostings = await User.getPostings(user_id);
+    if (userPostings.length < 3) {
+      return user_id;
+    }
+    return await getUser(myConsole);
+  } catch (error) {
+    return await User.signup(newUser);
+  }
+}
+
+function dateToTerm(startDate, numMonths) {
+  const w = 'winter', s = 'spring', f = 'fall';
+  const termMatrix = [
+    [w, s, f],
+    [s, f, w],
+    [f, w, s]
+  ];
+  const numTerms = numMonths >= 9 ? 3 : Math.ceil(numMonths / 4);
+  const startTerm = (0 <= startDate.getMonth() && startDate.getMonth() <= 3) ? 0 :
+    (4 <= startDate.getMonth() && startDate.getMonth() <= 7) ? 1 : 2;
+  return termMatrix[startTerm].slice(0, numTerms).join(',');
+};
+
+function getEndDate(startDate, numMonths) {
+  const date = new Date(startDate);
+  const day = date.getDate();
+  date.setMonth(date.getMonth() + numMonths);
+  if (date.getDate() != day) { // day overflow
+    date.setDate(0);
+  }
+  return date;
+}
+
+function parseGender(gender) {
+  if (gender.toLowerCase() === 'male only') return 'male';
+  else if (gender.toLowerCase() === 'female only') return 'female';
+  else if (gender.toLowerCase().includes('coed')) return 'co-ed';
+  else throw 'unhandled gender';
+};
+
+function generateTotalRooms(rooms_available) {
+  if (rooms_available > 4) return rooms_available;
+  return Math.floor(Math.random() * (6 - rooms_available) + rooms_available);
+}
+
+function generateDatetime(dateStr) {
+  const hours = Math.floor(Math.random() * 20 + 6) % 24;
+  const minutes = Math.floor(Math.random() * 60);
+  const seconds = Math.floor(Math.random() * 60);
+  const date = new Date(dateStr);
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds);
+  return date.toISOString()
+    .replace(/T/, ' ')
+    .replace(/\..+/, '');
+}
 
 async function cleanData(data, myConsole = console) {
   // TODO: address validation
@@ -191,16 +225,25 @@ async function cleanData(data, myConsole = console) {
   const user_id = await getUser(myConsole);
   const startDate = new Date(data.start_date);
   const duration = parseInt(data.duration.replace(/(^\d+)(.+$)/i, '$1'));
-  const endDate = new Date(startDate.setMonth(startDate.getMonth() + duration));
-  const created_at = new Date(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  const endDate = getEndDate(startDate, duration);
+  const rooms_available = parseInt(data.rooms_available);
+  const laundryOptions = ['ensuite', 'same-floor', 'common', 'unavailable'];
+  const created_at = generateDatetime(data.created_at.match(/\w+\s\d\d,\s\d\d\d\d/)[0]);
   const posting = new Posting({
     user_id,
     term: dateToTerm(startDate, duration),
     start_date: startDate.toISOString().replace(/T.*/, ''),
     end_date: endDate.toISOString().replace(/T.*/, ''),
+    pop: Math.floor(Math.random() * 20),
     price_per_month: parseFloat(data.price.match(/\d+(\.\d\d)?/)[0]),
     gender_details: parseGender(data.gender),
-    rooms_available: parseInt(data.rooms_available),
+    rooms_available,
+    total_rooms: generateTotalRooms(rooms_available),
+    ac: data.description.toLowerCase().match(/(ac)|(air conditioning)/) ? true : false,
+    washrooms: parseInt(data.washrooms),
+    wifi: data.description.toLowerCase().match(/wifi/) ? true : false,
+    parking: data.description.toLowerCase().match(/parking/) ? true : false,
+    laundry: laundryOptions[Math.floor(Math.random() * 4)],
     description: data.description,
     created_at,
     updated_at: created_at
@@ -214,8 +257,9 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
   const myConsole = new console.Console(logStream, logStream);
   const {
     item_selector, start_date_selector, duration_selector, price_selector,
-    gender_selector, rooms_available_selector, description_selector,
-    created_at_selector, address_selector
+    gender_selector, rooms_available_selector, washrooms_selector,
+    description_selector, created_at_selector, address_selector,
+    preview_selector
   } = selectors;
   try {
     await page.goto(url, { timeout });
@@ -225,13 +269,13 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
     //save target of original page to know that this was the opener: 
     const pageTarget = page.target();
     const listLen = await page.evaluate(
-      sel => document.querySelector(sel).parentElement.parentElement.childElementCount,
+      item_selector => document.querySelector(item_selector).parentElement.parentElement.childElementCount,
       item_selector
     );
     myConsole.log(`Found ${listLen} items`);
     for (let index = 0; index < listLen; ++index) {
-      await page.evaluate((sel, ind) => {
-        const el = document.querySelectorAll(sel)[ind];
+      await page.evaluate((item_selector, ind) => {
+        const el = document.querySelectorAll(item_selector)[ind];
         el.click();
       }, item_selector, index);
       myConsole.log(`Item clicked`);
@@ -245,8 +289,8 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
       const data = await newPage.evaluate(
         (
           start_date_selector, duration_selector, price_selector, gender_selector,
-          rooms_available_selector, description_selector, created_at_selector,
-          address_selector
+          rooms_available_selector, washrooms_selector, description_selector,
+          created_at_selector, address_selector
         ) => {
           return {
             start_date: document.querySelector(start_date_selector).innerText,
@@ -254,19 +298,21 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
             price: document.querySelectorAll(price_selector)[1].innerText,
             gender: document.querySelector(gender_selector).innerText,
             rooms_available: document.querySelector(rooms_available_selector).innerText,
+            washrooms: document.querySelector(washrooms_selector).innerText,
             description: document.querySelector(description_selector).innerText,
             created_at: document.querySelector(created_at_selector).innerText,
             address: document.querySelector(address_selector).innerText
           };
         },
         start_date_selector, duration_selector, price_selector, gender_selector,
-        rooms_available_selector, description_selector, created_at_selector,
-        address_selector
+        rooms_available_selector, washrooms_selector, description_selector,
+        created_at_selector, address_selector
       );
       myConsole.log(data);
       await newPage.close();
       myConsole.log(`Item page closed`);
 
+      // clean data
       let cleanedData = null;
       try {
         cleanedData = await cleanData(data, myConsole);
@@ -281,14 +327,31 @@ async function bamboo_list_scraper({ browser, page, data: { pid, url, selectors,
           posting_id: newPosting.posting_id,
           address_id: existingAddress.address_id,
         });
-        AddressOf.create(addressOf);
+        await AddressOf.create(addressOf);
       } else {
         const newAddress = await Address.create(address);
         const addressOf = new AddressOf({
           posting_id: newPosting.posting_id,
           address_id: newAddress.address_id,
         });
-        AddressOf.create(addressOf);
+        await AddressOf.create(addressOf);
+      }
+
+      // get photos
+      const photos = await page.evaluate((preview_selector, ind) => {
+        const photos = [];
+        for (const el of document.querySelectorAll(preview_selector)[ind].children) {
+          photos.push(el.querySelector('img').src);
+        }
+        return photos;
+      }, preview_selector, index);
+      myConsole.log('Found photos:\n', photos);
+      // TODO: upload photos to S3
+      for (const photo_url of photos) {
+        await Photo.create(new Photo({
+          posting_id: newPosting.posting_id,
+          photo_url
+        }));
       }
     }
     myConsole.log(`Finished scraping page list ${pid}`);
@@ -308,9 +371,11 @@ async function bamboo_scraper() {
       price_selector: '.ui.segment>h2.ui.header',
       gender_selector: '.man~.content>.description',
       rooms_available_selector: '.hashtag~.content>.description',
+      washrooms_selector: '.avatar~.content>.description',
       description_selector: '.listingdescription',
       created_at_selector: '.ui.segment>h4.ui.header',
-      address_selector: 'h1.header'
+      address_selector: 'h1.header',
+      preview_selector: '.ui.items>.item .slider'
     };
     const timeout = 90000; // ms
     const cluster = await Cluster.launch({
