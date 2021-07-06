@@ -1,7 +1,7 @@
 # Milestone 2 SQL and dataset files #
-`./milestone1_data/sample_dataset` contains the dataset that we are using for the app -> we scrape bamboohousing.ca to get sample data <br>
-`./milestone1_data/sample_queries_and_data` contains all the output for the sample queries for our 5 features mentioned in the report and also the test-sample.sql which contains all the sql queries for our features <br>
-`./server/database/migrations` contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db <br>
+1. `./milestone2_data` contains the dataset dump file, that we are using for the app -> we scrape bamboohousing.ca to get sample data.
+2. It also contains the test-production.sql and feature*-production.out files that are part of the milestone 2 requirements.
+3. `./server/database/migrations` contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db.
 
 # Production Dataset for the App #
 As of now this is what we are planning to do for the actual datasets to be used in the app:
