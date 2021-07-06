@@ -124,15 +124,14 @@ NATURAL JOIN Address
 ORDER BY pop DESC, updated_at DESC
 LIMIT 20, 21;
 
-
---sort and filter together filter by term is 'winter', rooms available are 5
---for the page 1
+-- sort and filter combined
+-- for the page 1
 SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
 FROM Posting 
 NATURAL JOIN AddressOf 
 NATURAL JOIN Address
 WHERE FIND_IN_SET('winter', term) > 0 AND rooms_available = 5 AND gender_details = 'co-ed'
-ORDER BY price_per_month DESC, updated_at DESC
+ORDER BY price_per_month ASC, updated_at DESC
 LIMIT 0, 21;
 
 
@@ -146,15 +145,6 @@ ON p.posting_id = ph.posting_id
 ORDER BY created_at DESC
 LIMIT 10;
 
--- sort and filter combined
--- for the page 1
-SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
-FROM Posting 
-NATURAL JOIN AddressOf 
-NATURAL JOIN Address
-WHERE FIND_IN_SET('fall', term) > 0 AND rooms_available = 5 AND gender_details = 'co-ed'
-ORDER BY price_per_month ASC, updated_at DESC
-LIMIT 0, 21;
 
 -- Feature 6: Posting photos
 -- Upload PostingPhoto for a posting
