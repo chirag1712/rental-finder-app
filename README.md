@@ -8,6 +8,12 @@ As of now this is what we are planning to do for the actual datasets to be used 
 1. New users and postings will populate the database by filling in details and creating postings
 2. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
 3. Here are some statistics about the dataset:
+    * There are a total of ~100 postings scraped from www.bamboohousing.ca
+    * There are ~60 different addresses for those postings.
+    * There are ~300 scraped photographs for those postings.
+
+### Instructions for loading the production dataset:
+With a fresh db instance, you can use the `npm run db_pop_sample.js` script to scrape the real sublet posting data (as desribed in the report).
 # Milestone 2 Features implemented #
 Features implemented as of now:
 1. Login/Signup flow (`http://localhost:3000/`)
