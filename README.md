@@ -13,7 +13,7 @@ As of now this is what we are planning to do for the actual datasets to be used 
 # Milestone 2 #
 Features implemented as of now:
 1. Login/Signup flow
-2. Create Posting flow
+2. Create Posting flow (authorized route, so you have to login first)
 3. Index postings with filters and sorting
 4. Index postings with complete sentence searches
 5. Show information for a single posting
