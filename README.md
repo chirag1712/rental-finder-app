@@ -10,8 +10,17 @@ As of now this is what we are planning to do for the actual datasets to be used 
 3. New users and postings will populate the database by filling in details and creating postings
 4. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
 
+# Milestone 2 #
+Features implemented as of now:
+1. Login/Signup flow
+2. Create Posting flow
+3. Index postings with filters and sorting
+4. Index postings with complete sentence searches
+5. Show information for a single posting
+6. Supporting images for user postings
+
 # Getting Started #
-- Our production database is an AWS RDS instance, which functions through user `admin`
+- Our production database is a MySQL database hosted on an AWS RDS instance, which functions through the user `admin`
 - `admin` is a super user which allows them to create triggers
 1. Install MySQL locally and run sql:
   ```sql
