@@ -35,7 +35,7 @@ const signup = async (request, response) => {
       return response.status(400).json({ error: "User already exists" });
     }
 
-    const e_password = encryptPassword(password);
+    const e_password = await encryptPassword(password);
 
     // Create a User
     const user = new User({
