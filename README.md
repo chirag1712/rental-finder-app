@@ -89,7 +89,5 @@ Features implemented as of now:
 1. Generating realistic fake data to increase the size of the prod dataset and load test and optimize performance further.
 2. Using this https://thisrentaldoesnotexist.com/ for generating images for the rental apartments.
 
-## II. 
-
 # References #
 We used this repository https://github.com/bezkoder/nodejs-express-mysql/tree/d8cef0f9dace78d1a78da58611526e6474cb2a52 for getting the basic project structure and a simple CRUD api for a student data model in the server folder (our backend) for our milestone zero project.
