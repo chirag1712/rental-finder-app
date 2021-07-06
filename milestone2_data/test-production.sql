@@ -104,34 +104,33 @@ LIMIT ${page * 20}, 21;
 
 
 -- Feature 5: Filter/Sort posting
--- filter by term
+-- filter by term is 'fall', rooms available are 5
+--for the page 1
 SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
 FROM Posting 
 NATURAL JOIN AddressOf 
 NATURAL JOIN Address
-WHERE ${Filters}
-ORDER BY ${sortBy}
-LIMIT ${page * 20}, 21;
+WHERE FIND_IN_SET('fall', term) > 0 AND rooms_available = 5
+ORDER BY updated_at DESC
+LIMIT 0, 21;
 
 
--- sort by created_at
-SELECT p.*, a.*, ph.photo_id, ph.url
-FROM Posting AS p
-NATURAL JOIN AddressOf AS ao
-NATURAL JOIN Address AS a
-LEFT OUTER JOIN PostingPhoto AS ph
-ON p.posting_id = ph.posting_id 
-ORDER BY created_at DESC
-LIMIT 10;
+-- sort by popularity
+-- for the page 2 as the offeset is 20
+SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
+FROM Posting 
+NATURAL JOIN AddressOf 
+NATURAL JOIN Address
+ORDER BY pop DESC, updated_at DESC
+LIMIT 20, 21;
 
 -- sort and filter combined
-SELECT p.*, a.*, ph.photo_id, ph.url
-FROM Posting AS p
-NATURAL JOIN AddressOf AS ao
-NATURAL JOIN Address AS a
-LEFT OUTER JOIN PostingPhoto AS ph
-ON p.posting_id = ph.posting_id 
-WHERE term LIKE '%winter%' OR term LIKE '%spring%' 
-ORDER BY price_per_month 
-LIMIT 10;
+-- for the page 1
+SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
+FROM Posting 
+NATURAL JOIN AddressOf 
+NATURAL JOIN Address
+WHERE FIND_IN_SET('fall', term) > 0 AND rooms_available = 5 AND gender_details = 'co-ed'
+ORDER BY price_per_month ASC, updated_at DESC
+LIMIT 0, 21;
 
