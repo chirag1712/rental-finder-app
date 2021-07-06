@@ -17,6 +17,24 @@ Features implemented as of now:
 5. Show information for a single posting (`http://localhost:3000/Postings/1`)
 6. Supporting images for user postings
 
+### For the features, you can find the corresponding sql queries in these files:
+1. `./server/app/models/user.model.js` (contains all user related queries)
+2. `./server/app/models/posting.model.js` (contains all posting and address related queries)
+3. `./server/app/models/photo.model.js` (contains query for inserting a record into the postingphoto table)
+
+
+### For the backend endpoint implementations, checkout these files:
+1. `./server/app/controllers/user.controller.js`
+2. `./server/app/controllers/posting.controller.js`
+3. `./server/app/controllers/photo.controller.js`
+
+### And the frontend code exists in these files:
+1. `./client/src/components` contains all the different components for the web app.
+2. `./client/src/App.js` contains all the routes (private and public) for the app.
+### Database config and amazon s3 config files are as follows:
+1. MySQL connection: `./server/app/models/db.js`
+2. AWS S3 upload to bucket: `./server/app/models/s3.js`
+
 # Getting Started (running the project) #
 - Our production database is a MySQL database hosted on an AWS RDS instance, which functions through the user `admin`
 - `admin` is a super user which allows them to create triggers
