@@ -1,16 +1,14 @@
-# Milestone 1 SQL and dataset files #
+# Milestone 2 SQL and dataset files #
 `./milestone1_data/sample_dataset` contains the dataset that we are using for the app -> we scrape bamboohousing.ca to get sample data <br>
 `./milestone1_data/sample_queries_and_data` contains all the output for the sample queries for our 5 features mentioned in the report and also the test-sample.sql which contains all the sql queries for our features <br>
 `./server/database/migrations` contains the sql scripts to create the db, create the tables with the proper constraints, create triggers to provide assertion functionality and to drop the db <br>
 
-# Datasets for the App #
+# Production Dataset for the App #
 As of now this is what we are planning to do for the actual datasets to be used in the app:
-1. Using this https://thisrentaldoesnotexist.com/ for generating images for the rental apartments
-2. Using this https://thispersondoesnotexist.com for generating profile images for the subtenants
-3. New users and postings will populate the database by filling in details and creating postings
-4. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
-
-# Milestone 2 #
+1. New users and postings will populate the database by filling in details and creating postings
+2. We have a scraper for getting a sample dataset (`./server/database/db_pop_sample.js`), a WIP scraper to get sample rental images and down the line we also plan to have a generative script to generate realistic data for sublet postings.
+3. Here are some statistics about the dataset:
+# Milestone 2 Features implemented #
 Features implemented as of now:
 1. Login/Signup flow (`http://localhost:3000/`)
 2. Create Posting flow (authorized route, so you have to login first) (`http://localhost:3000/CreatePosting`)
@@ -19,7 +17,7 @@ Features implemented as of now:
 5. Show information for a single posting (`http://localhost:3000/Postings/1`)
 6. Supporting images for user postings
 
-# Getting Started #
+# Getting Started (running the project) #
 - Our production database is a MySQL database hosted on an AWS RDS instance, which functions through the user `admin`
 - `admin` is a super user which allows them to create triggers
 1. Install MySQL locally and run sql:
@@ -61,6 +59,13 @@ Features implemented as of now:
 
 4. Launch the app by running the following from the server directory:
 `npm run dev`
+
+# Future work #
+## I. Data synthesis plan
+1. Generating realistic fake data to increase the size of the prod dataset and load test and optimize performance further.
+2. Using this https://thisrentaldoesnotexist.com/ for generating images for the rental apartments.
+
+## II. 
 
 # References #
 We used this repository https://github.com/bezkoder/nodejs-express-mysql/tree/d8cef0f9dace78d1a78da58611526e6474cb2a52 for getting the basic project structure and a simple CRUD api for a student data model in the server folder (our backend) for our milestone zero project.
