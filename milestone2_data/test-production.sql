@@ -77,7 +77,7 @@ FROM PostingPhoto
 WHERE posting_id = 2;
 
 -- Feature 4: Search Posting
---search posting using a keyword
+-- Option 1: search posting using regex patterns
 SELECT p.*, a.*, ph.photo_id, ph.url
 FROM Posting AS p
 NATURAL JOIN AddressOf AS ao
@@ -89,19 +89,19 @@ OR description LIKE '%parking%'
 OR description LIKE '%ensuite%'
 LIMIT 10;
 
--- we chose to use fulltext indexes and SQL MATCH function to do full sentence searches
-
-SELECT posting_id AS id, price_per_month AS price, CONCAT(street_num, " ", street_name, ", ",city) AS address
+-- Option 2 Using fulltext indexes and the SQL MATCH function to do full sentence searches
+SELECT 
+    posting_id AS id, 
+    price_per_month AS price, 
+    CONCAT(street_num, " ", street_name, ", ", city) AS address
 FROM Posting 
     NATURAL JOIN AddressOf 
     NATURAL JOIN Address
 WHERE 
     MATCH (description) AGAINST('RezOne') OR
-    MATCH(street_num, street_name, building_name) 
-        AGAINST('RezOne')
+    MATCH(street_num, street_name, building_name) AGAINST('RezOne')
 ORDER BY updated_at DESC
-LIMIT ${page * 20}, 21;
-
+LIMIT 40, 21;
 
 -- Feature 5: Filter/Sort posting
 -- filter by term
@@ -112,7 +112,6 @@ NATURAL JOIN Address
 WHERE ${Filters}
 ORDER BY ${sortBy}
 LIMIT ${page * 20}, 21;
-
 
 -- sort by created_at
 SELECT p.*, a.*, ph.photo_id, ph.url
@@ -134,4 +133,14 @@ ON p.posting_id = ph.posting_id
 WHERE term LIKE '%winter%' OR term LIKE '%spring%' 
 ORDER BY price_per_month 
 LIMIT 10;
+
+-- Feature 6: Posting photos
+-- Upload PostingPhoto for a posting
+INSERT INTO PostingPhoto SET
+posting_id = 1,
+url = "https://s3-us-east-2.amazonaws.com/cs348-sublet-content/posting_124_2021-07-05T22:01:54.290Z_image_2.jpg";
+
+-- Getting photo URLs for a posting
+SELECT url FROM PostingPhoto WHERE posting_id = 1;
+
 
