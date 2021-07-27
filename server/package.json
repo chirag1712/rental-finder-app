@@ -15,7 +15,7 @@
     "start": "node -r dotenv/config server",
     "server": "nodemon -r dotenv/config server",
     "client": "npm start --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"nodemon -r dotenv/config server\" \"npm start --prefix ../client\""
   },
   "repository": {
     "type": "git",
