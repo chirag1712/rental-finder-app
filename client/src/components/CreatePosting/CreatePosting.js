@@ -1,18 +1,22 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Input from '../Landing/Input.js'
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
 import { WhiteBox, SelectBox, TextArea, Label, WrapperDiv } from './CreatePostingStyles.js';
 import logo from '../../images/HonkForSubletLogo.png'
 import axios from 'axios';
+import { useAuth } from '../../useAuth';
+import { useHistory } from 'react-router';
 
-const CreatePosting = ({ user_id, setUserId }) => {
+const CreatePosting = () => {
+    const history = useHistory();
+    const auth = useAuth();
     const form = useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const data = new FormData(form.current);
-        data.set('user_id', user_id);
+        data.set('user_id', auth.user.id);
 
         var files = document.getElementById('fileItem').files;
         for (let i = 0; i < files.length; i++) {
@@ -31,11 +35,6 @@ const CreatePosting = ({ user_id, setUserId }) => {
             alert('Error!');
             // console.log(err.response.data);
         }
-    }
-
-    const handleLogout = () => {
-        setUserId(null);
-        localStorage.clear();
     }
 
     const handleChange = () => { }
@@ -129,7 +128,7 @@ const CreatePosting = ({ user_id, setUserId }) => {
                         <Margin50></Margin50>
                         <GreenButton type="submit" value="submit"> Submit </GreenButton>
                     </form>
-                    <GreenButton onClick={handleLogout}>Logout</GreenButton>
+                    <GreenButton onClick={() => auth.signOut()}>Logout</GreenButton>
                     <Margin50></Margin50>
                 </WhiteBox>
             </WrapperDiv>

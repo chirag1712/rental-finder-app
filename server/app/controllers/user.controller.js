@@ -89,6 +89,7 @@ const login = async (request, response) => {
     }
 
   } catch(err) {
+    console.error(err);
     response.status(500).send({ error: "Internal Error while log in" });
   }
 }
