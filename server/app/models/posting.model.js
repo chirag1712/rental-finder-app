@@ -93,9 +93,16 @@ Posting.getPostings = filterInfo => {
     sortStatement += 'updated_at DESC';
 
     const query =
-        `SELECT posting_id AS id, price_per_month AS price, 
+        `SELECT Posting.posting_id AS id, price_per_month AS price, url,
 				CONCAT(street_num, " ", street_name, ", ",city) AS address
-		FROM Posting NATURAL JOIN AddressOf NATURAL JOIN Address
+		FROM Posting 
+             NATURAL JOIN AddressOf 
+             NATURAL JOIN Address
+             LEFT OUTER JOIN (
+                SELECT posting_id, url
+                FROM PostingPhoto NATURAL JOIN
+                (SELECT MIN(photo_id) as photo_id FROM PostingPhoto GROUP BY posting_id) as ID
+             ) as Photo ON Photo.posting_id = Posting.posting_id
 		${filter.length > 6 ? filter : ''}
 		ORDER BY ${sortStatement}
 		LIMIT ${page * 20}, 21`;

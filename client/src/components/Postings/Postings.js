@@ -1,5 +1,4 @@
 import './Postings.css';
-import imgURL from './test.jpg';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -68,7 +67,7 @@ const Postings = () => {
                 <button className='btn apply' onClick={e => getPostings(0)}>Apply</button>
             </div>
             <div className='postingGrid'>
-                {postings.list.map((p) => <PostingCell key={p.id} id={p.id} imgURL={imgURL} address={p.address} price={p.price} />)}
+                {postings.list.map((p) => <PostingCell key={p.id} id={p.id} imgURL={p.url} address={p.address} price={p.price} />)}
                 <div className='paginator'>
                     {postings.list.length > 0 ?
                         <>

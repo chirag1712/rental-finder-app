@@ -135,6 +135,7 @@ const indexPostings = async (request, response) => {
 
         response.status(200).json({ list: postings, next });
     } catch (err) {
+        // console.log(err)
         return response.status(500).send({ error: 'Internal server Error' })
     }
 }
