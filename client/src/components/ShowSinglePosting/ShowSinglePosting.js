@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
-import { PostingWrapper, ImageDiv, DetailsDiv, DetailsText, PriceText, DescriptionDiv, DescriptionText } from './ShowSinglePostingStyles';
+import { PostingWrapper, ImageDiv, DescriptionWrapper, DetailsDiv,DetailsWrapper, DetailsTextBold, DetailsText, MainInfoDiv, PriceText, DescriptionDiv, DescriptionText } from './ShowSinglePostingStyles';
 import axios from 'axios';
-import imgURL from '../Postings/test.jpg'
+import defaultImg from '../../images/HonkForSubletLogo.png';
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
+
 
 const ShowSinglePosting = () => {
     const [info, setInfo] = useState('');
+    const [userInfo, setUserInfo] = useState('');
 
     const pathName = window.location.pathname;
     const pathId = pathName.slice(9);
 
     const getInfo = () => {
         axios.get('/api/postings/posting/' + pathId)
-            .then(response => {
+        .then(response => {
                 const info = response.data;
                 setInfo(info[0]);
                 console.log(info[0]);
@@ -20,9 +24,29 @@ const ShowSinglePosting = () => {
             .catch(error => console.error(`Error: ${error}`));
     }
 
+    const getUserInfo = () => {
+        axios.get('/api/users/user/2')
+        .then(response => {
+                const userInfo = response.data;
+                setUserInfo(userInfo);
+                console.log(userInfo);
+            })
+            .catch(error => console.error(`Error: ${error}`));
+    }
+
     useEffect(() => {
         getInfo();
+        getUserInfo();
     }, []);
+
+    const images = [
+        {
+            original: info.url,
+            thumbnail: info.url,
+            thumbnailHeight: 50,
+            thumbnailWidth: 150,
+        },
+    ];
 
     const getDate = (date) => {
         if (date) {
@@ -49,31 +73,72 @@ const ShowSinglePosting = () => {
         return "Not Available";
     }
 
+    const firstLetterUpper = (str) => {
+        if (str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        } else {
+            return " ";
+        }
+    }
+
+    const splitUpper = (str) => {
+        let newStr = "";
+        var termsArr = str.split(",");
+        for (var i = 0; i < termsArr.length; ++i) {
+            newStr += termsArr[i].charAt(0).toUpperCase() + termsArr[i].slice(1);
+            if (i < termsArr.length - 1) {
+                newStr += ', ';
+            }
+        }
+        return newStr;
+    }
+
+    const getTerm = (str) => {
+        if (!str) {
+            return "";
+        }
+        if (str.includes(',')) {
+            return splitUpper(str);
+        } else {
+            return firstLetterUpper(str);
+        }
+    }
 
     return (
         <PostingWrapper>
             <Margin50></Margin50>
             <Header> {info.street_num} {info.street_name}, {info.city}, {info.postal_code} </Header>
             <ImageDiv>
-                <img className='image' src={imgURL} />
+            <ImageGallery items={images} />
             </ImageDiv>
+            <MainInfoDiv>
+            <PriceText> ${info.price_per_month} / Month </PriceText>
+            <DetailsText> {info.total_rooms} Bedrooms + {info.washrooms} Washrooms</DetailsText>
+            <DetailsText> Number of Rooms Available: {info.rooms_available} </DetailsText>
+            <br></br>
+            <DetailsTextBold> Contact Details </DetailsTextBold>
+            <DetailsText> {userInfo.first_name} {userInfo.last_name} </DetailsText>
+            <DetailsText> {userInfo.email} </DetailsText>
+            </MainInfoDiv>
+            <DetailsWrapper>
+            <PriceText> Additional Details </PriceText>
             <DetailsDiv>
-                <PriceText> ${info.price_per_month} / Month </PriceText>
-                <DetailsText> {info.total_rooms} Bedrooms + {info.washrooms} Washrooms</DetailsText>
                 <DetailsText> Start Date: {getDate(info.start_date)}</DetailsText>
                 <DetailsText> End Date: {getDate(info.end_date)}</DetailsText>
-                <DetailsText> Term: {info.term} </DetailsText>
-                <DetailsText> Number of Rooms Available: {info.rooms_available} </DetailsText>
-                <DetailsText> Gender Details: {info.gender_details} </DetailsText>
+                <DetailsText> Term: {getTerm(info.term)} </DetailsText>
+                <DetailsText> Gender Details: {firstLetterUpper(info.gender_details)} </DetailsText>
                 <DetailsText> A/C: {convertBoolean(info.ac)} </DetailsText>
                 <DetailsText> Parking: {convertBoolean(info.parking)} </DetailsText>
                 <DetailsText> Wifi: {convertBoolean(info.wifi)} </DetailsText>
                 <DetailsText> Laundry: {getLaundry(info.laundry)} </DetailsText>
             </DetailsDiv>
-            <DescriptionDiv>
+            </DetailsWrapper>
+             <DescriptionDiv>
                 <PriceText> Description </PriceText>
                 <DescriptionText> {info.description} </DescriptionText>
-            </DescriptionDiv>
+                </DescriptionDiv>
+            <DescriptionWrapper>
+            </DescriptionWrapper>
         </PostingWrapper>
     );
 }
