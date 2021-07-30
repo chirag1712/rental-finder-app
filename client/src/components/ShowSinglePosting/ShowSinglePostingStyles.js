@@ -38,6 +38,7 @@ export const DetailsWrapper = styled.div`
   margin-top: 20px;
   display: flex;
   width: 75%;
+  min-width: 900px;
   margin-left: 12%;
   align-items: center;
   justify-content: center;
@@ -74,6 +75,7 @@ export const MainInfoDiv = styled.div`
   padding-bottom: 20px;
   background-color: #d8e9f0;
   border-radius: 20px;
+  min-width: 900px;
 `;
 
 export const DescriptionDiv = styled.div`
@@ -90,6 +92,7 @@ export const DescriptionDiv = styled.div`
   padding-bottom: 20px;
   background-color: #d8e9f0;
   border-radius: 20px;
+  min-width: 900px;
 `;
 
 export const DescriptionWrapper = styled.div`
