@@ -50,19 +50,21 @@ Posting.userCheck = userId => {
 }
 
 Posting.getSinglePosting = id => {
-    const query = `SELECT p.*, a.*, ph.url
+    const query = `SELECT p.*, a.*
     FROM Posting AS p
     NATURAL JOIN User AS u
     NATURAL JOIN AddressOf AS ao
     NATURAL JOIN Address AS a
-    LEFT OUTER JOIN PostingPhoto AS ph 
-    ON p.posting_id = ph.posting_id
     WHERE p.posting_id = ${id}`;
 
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
-            if (err) reject(err);
-            else resolve(res);
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(res[0]);
+            }
         });
     })
 }

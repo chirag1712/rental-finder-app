@@ -20,4 +20,17 @@ Photo.create = newPhoto => {
     });
 }
 
+Photo.getUrlsForPosting = (posting_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM PostingPhoto WHERE posting_id = ?", posting_id, (err, res) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                resolve(res.map((ph) => ph.url));
+            }
+        });
+    });
+}
+
 module.exports = Photo;
