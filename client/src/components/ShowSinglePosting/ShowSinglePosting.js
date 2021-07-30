@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {Header, Margin50 } from '../../styles/AppStyles.js';
-import { PostingWrapper, ImageDiv, DescriptionWrapper, DetailsDiv,DetailsWrapper, DetailsText, MainInfoDiv, PriceText, DescriptionDiv, DescriptionText } from './ShowSinglePostingStyles';
+import { PostingWrapper, ImageDiv, DescriptionWrapper, DetailsDiv,DetailsWrapper, DetailsText, MainInfoDiv, PriceText, DescriptionDiv, DetailsTable, DescriptionText, DetailsCell } from './ShowSinglePostingStyles';
 import axios from 'axios';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -126,14 +126,40 @@ const ShowSinglePosting = () => {
             <DetailsWrapper>
             <PriceText> Additional Details </PriceText>
             <DetailsDiv>
+            <DetailsTable>
+                <tr>
+                <DetailsCell>
                 <DetailsText> Start Date: {getDate(info.start_date)}</DetailsText>
+                </DetailsCell>
+                <DetailsCell>
                 <DetailsText> End Date: {getDate(info.end_date)}</DetailsText>
+                </DetailsCell>
+                </tr>
+                <tr>
+                <DetailsCell>
                 <DetailsText> Term: {getTerm(info.term)} </DetailsText>
+                </DetailsCell>
+                <DetailsCell>
                 <DetailsText> Gender Details: {firstLetterUpper(info.gender_details)} </DetailsText>
+                </DetailsCell>
+                </tr>
+                <tr>
+                <DetailsCell>
                 <DetailsText> A/C: {convertBoolean(info.ac)} </DetailsText>
-                <DetailsText> Parking: {convertBoolean(info.parking)} </DetailsText>
+                </DetailsCell>
+                <DetailsCell>
                 <DetailsText> Wifi: {convertBoolean(info.wifi)} </DetailsText>
+                </DetailsCell>
+                </tr>
+                <tr>
+                <DetailsCell>
+                <DetailsText> Parking: {convertBoolean(info.parking)} </DetailsText>
+                </DetailsCell>
+                <DetailsCell>
                 <DetailsText> Laundry: {getLaundry(info.laundry)} </DetailsText>
+                </DetailsCell>
+                </tr>
+            </DetailsTable>
             </DetailsDiv>
             </DetailsWrapper>
              <DescriptionDiv>

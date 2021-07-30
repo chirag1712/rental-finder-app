@@ -10,11 +10,27 @@ export const DetailsDiv = styled.div`
   text-align: center;
   width: 100%;
   height: 100px;
+  align-items: center;
+  display: inline-block;
+  justify-content: center;
+  flex-flow: column wrap;
+`;
+
+export const DetailsTable = styled.table`
   text-align: center;
+  width: 100%;
+  height: 100px;
   align-items: center;
   display: flex;
   justify-content: center;
   flex-flow: column wrap;
+`;
+
+export const DetailsCell = styled.td`
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `;
 
 export const DetailsWrapper = styled.div`
@@ -106,9 +122,6 @@ export const DetailsText = styled.label`
   font-style: normal;
   font-weight: normal;
   font-size: 20px;
-  display: flex;
-  align: top;
-  color: black;
 `;
 
 export const DetailsTextBold = styled.label`
