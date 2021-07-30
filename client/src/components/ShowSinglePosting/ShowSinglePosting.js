@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Wrapper, Header, BigLogo, Margin50, GreenButton } from '../../styles/AppStyles.js';
+import {Header, Margin50 } from '../../styles/AppStyles.js';
 import { PostingWrapper, ImageDiv, DescriptionWrapper, DetailsDiv,DetailsWrapper, DetailsTextBold, DetailsText, MainInfoDiv, PriceText, DescriptionDiv, DescriptionText } from './ShowSinglePostingStyles';
 import axios from 'axios';
 import defaultImg from '../../images/HonkForSubletLogo.png';
@@ -10,6 +10,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 const ShowSinglePosting = () => {
     const [info, setInfo] = useState('');
     const [userInfo, setUserInfo] = useState('');
+    const images = [];
 
     const pathName = window.location.pathname;
     const pathId = pathName.slice(9);
@@ -18,14 +19,13 @@ const ShowSinglePosting = () => {
         axios.get('/api/postings/posting/' + pathId)
         .then(response => {
                 const info = response.data;
-                setInfo(info[0]);
-                console.log(info[0]);
+                setInfo(info);
             })
             .catch(error => console.error(`Error: ${error}`));
     }
 
     const getUserInfo = () => {
-        axios.get('/api/users/user/2')
+        axios.get('/api/users/user/' + info.user_id)
         .then(response => {
                 const userInfo = response.data;
                 setUserInfo(userInfo);
@@ -34,19 +34,22 @@ const ShowSinglePosting = () => {
             .catch(error => console.error(`Error: ${error}`));
     }
 
+    for (let i = 0; i < info.photo_urls.length; ++i) {
+        images.push({
+            original: info.photo_urls[i],
+            thumbnail: info.photo_urls[i],
+            thumbnailHeight: 50,
+            thumbnailWidth: 100,
+            originalHeight: 300,
+            originalWidth: 300
+        })
+    }
+    console.log(images);
+
     useEffect(() => {
         getInfo();
         getUserInfo();
     }, []);
-
-    const images = [
-        {
-            original: info.url,
-            thumbnail: info.url,
-            thumbnailHeight: 50,
-            thumbnailWidth: 150,
-        },
-    ];
 
     const getDate = (date) => {
         if (date) {

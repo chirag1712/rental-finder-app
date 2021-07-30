@@ -8,24 +8,6 @@ export const PostingWrapper = styled.div`
   position: absolute;
 `;
 
-export const UserInfoDiv = styled.div`
-  position: absolute;
-  width: 376px;
-  height: 113px;
-  left: 185px;
-  top: 657px;
-`;
-
-export const UserText = styled.h4`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  color: black;
-`;
-
 export const DetailsDiv = styled.div`
   text-align: center;
   width: 100%;
