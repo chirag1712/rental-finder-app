@@ -13,4 +13,9 @@ router.post("/signup", users.signUpValidation, users.signup);
 // @access PRIVATE
 router.post("/login", users.logInValidation, users.login);
 
+// @route  GET api/users/login
+// @desc   gets user information
+// @access PRIVATE
+router.get("/user/:id", users.getUser);
+
 module.exports = router;
