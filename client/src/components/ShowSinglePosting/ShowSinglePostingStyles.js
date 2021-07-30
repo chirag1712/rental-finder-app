@@ -48,7 +48,7 @@ export const MainInfoDiv = styled.div`
   margin-top: 30px;
   display: flex;
   width: 75%;
-  height: 175px;
+  height: 160px;
   margin-left: 12%;
   align-items: center;
   justify-content: center;
@@ -88,7 +88,7 @@ export const DescriptionWrapper = styled.div`
 
 export const DescriptionText = styled.label`
   margin-top: 10px;
-  width: 900px;
+  width: 90%;
   font-size: 15px;
 `;
 
