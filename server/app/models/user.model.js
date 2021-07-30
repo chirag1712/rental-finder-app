@@ -37,6 +37,20 @@ User.findOne = email => {
   });
 }
 
+User.getById = id => {
+  return new Promise((resolve, reject) => {
+    sql.query("SELECT * FROM User WHERE user_id = ?", id, (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        reject(err);
+      } else {
+        // console.log("user found: ", res);
+        resolve(res[0]);
+      }
+    });
+  });
+}
+
 User.getPostings = user_id => {
   return new Promise((resolve, reject) => {
     sql.query(`SELECT p.*, a.*, ph.photo_id, ph.url
