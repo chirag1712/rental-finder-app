@@ -3,9 +3,7 @@ import styled from 'styled-components';
 export const PostingWrapper = styled.div`
   height: 100%;
   width: 100%;
-  background-color: white;
   backdrop-filter: blur(4px);
-  position: absolute;
 `;
 
 export const DetailsDiv = styled.div`
@@ -21,7 +19,7 @@ export const DetailsDiv = styled.div`
 
 export const DetailsWrapper = styled.div`
   padding: 20px;
-  margin-top: 100px;
+  margin-top: 20px;
   display: flex;
   width: 75%;
   margin-left: 12%;
@@ -30,16 +28,14 @@ export const DetailsWrapper = styled.div`
   flex-flow: column wrap;
   border: 1px solid #898989;
   box-sizing: border-box;
+  background-color: #d8e9f0;
+  border-radius: 20px;
 `;
 
 export const ImageDiv = styled.div`
-  position: absolute;
-  min-width: 518px;
-  min-height: 320px;
-  max-width: 518px;
-  max-height: 320px;
-  margin-top: 50px;
-  margin-left: 12%;
+  margin-left: 25%;
+  width: 50%;
+  margin-top: 30px;
   background-color: white;
   text-align: center;
   display: flex;
@@ -48,22 +44,23 @@ export const ImageDiv = styled.div`
 `;
 
 export const MainInfoDiv = styled.div`
-  margin-top: 50px;
-  margin-left: 55%;
-  text-align: center;
-  width: 518px;
-  height: 320px;
-  border: 1px solid #898989;
-  box-sizing: border-box;
-  text-align: center;
-  align-items: center;
+  padding-top: 20px;
+  margin-top: 30px;
   display: flex;
+  width: 75%;
+  height: 175px;
+  margin-left: 12%;
+  align-items: center;
   justify-content: center;
   flex-flow: column wrap;
+  border: 1px solid #898989;
+  box-sizing: border-box;
+  padding-bottom: 20px;
+  background-color: #d8e9f0;
+  border-radius: 20px;
 `;
 
 export const DescriptionDiv = styled.div`
-  position: absolute;
   padding-top: 20px;
   margin-top: 20px;
   display: flex;
@@ -75,12 +72,12 @@ export const DescriptionDiv = styled.div`
   border: 1px solid #898989;
   box-sizing: border-box;
   padding-bottom: 20px;
+  background-color: #d8e9f0;
+  border-radius: 20px;
 `;
 
 export const DescriptionWrapper = styled.div`
-  position: absolute;
   padding: 20px;
-  margin-top: 300px;
   display: flex;
   margin-left: 12%;
   align-items: center;
@@ -92,7 +89,6 @@ export const DescriptionWrapper = styled.div`
 export const DescriptionText = styled.label`
   margin-top: 10px;
   width: 900px;
-  height: 200px;
   font-size: 15px;
 `;
 
