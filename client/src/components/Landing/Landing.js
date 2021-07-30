@@ -135,7 +135,7 @@ const Landing = ({ setUserId }) => {
                     <Input
                         type='tel'
                         name='phone_num'
-                        placeHolder='Phone Numer'
+                        placeHolder='Phone Number'
                         value={userInfo.phone_num}
                         onChange={onChange} />
                 }
