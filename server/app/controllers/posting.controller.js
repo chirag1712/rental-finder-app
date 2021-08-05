@@ -5,7 +5,6 @@ const uploadToS3 = require("../models/s3.js");
 
 //express validator
 const { check, validationResult } = require("express-validator");
-const { query } = require('../models/db.js');
 
 const format = str => {
     if ('true' === str) return true
