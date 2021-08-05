@@ -124,7 +124,7 @@ const CreatePosting = () => {
                         <TextArea rows="5" cols="60" name="description" onChange={handleChange}>
                             Enter Description Here...
                         </TextArea>
-                        <input id="fileItem" type="file" multiple onChange={handleChange}></input>
+                        <input id="fileItem" type="file" accept="image/*" multiple onChange={handleChange}></input>
                         <Margin50></Margin50>
                         <GreenButton type="submit" value="submit"> Submit </GreenButton>
                     </form>

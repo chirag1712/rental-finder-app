@@ -8,7 +8,6 @@ const upload = async (request, response) => {
     const s3FileUrl = process.env.AWS_UPLOADED_FILE_URL_LINK;
 
     const photo_ids = [];
-
     const uploadPromises = files.map(async (file) => {
         try {
             var key = "posting_" + posting_id + "_" + new Date().toISOString() + "_" + file.originalname;
@@ -29,9 +28,10 @@ const upload = async (request, response) => {
             return response.status(500).send({ error: "Internal Error while uploading to s3" });
         }
     });
-
     await Promise.all([...uploadPromises]);
-    return response.send({ id: photo_ids });
+
+    console.log("photo_ids uploaded = ", photo_ids);
+    return response.send({ photo_ids: photo_ids });
 };
 
 module.exports = { upload };

@@ -50,19 +50,21 @@ Posting.userCheck = userId => {
 }
 
 Posting.getSinglePosting = id => {
-    const query = `SELECT p.*, a.*, ph.url
+    const query = `SELECT p.*, a.*
     FROM Posting AS p
     NATURAL JOIN User AS u
     NATURAL JOIN AddressOf AS ao
     NATURAL JOIN Address AS a
-    LEFT OUTER JOIN PostingPhoto AS ph 
-    ON p.posting_id = ph.posting_id
     WHERE p.posting_id = ${id}`;
 
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
-            if (err) reject(err);
-            else resolve(res);
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(res[0]);
+            }
         });
     })
 }
@@ -93,9 +95,16 @@ Posting.getPostings = filterInfo => {
     sortStatement += 'updated_at DESC';
 
     const query =
-        `SELECT posting_id AS id, price_per_month AS price, 
+        `SELECT Posting.posting_id AS id, price_per_month AS price, url,
 				CONCAT(street_num, " ", street_name, ", ",city) AS address
-		FROM Posting NATURAL JOIN AddressOf NATURAL JOIN Address
+		FROM Posting 
+             NATURAL JOIN AddressOf 
+             NATURAL JOIN Address
+             LEFT OUTER JOIN (
+                SELECT posting_id, url
+                FROM PostingPhoto NATURAL JOIN
+                (SELECT MIN(photo_id) as photo_id FROM PostingPhoto GROUP BY posting_id) as ID
+             ) as Photo ON Photo.posting_id = Posting.posting_id
 		${filter.length > 6 ? filter : ''}
 		ORDER BY ${sortStatement}
 		LIMIT ${page * 20}, 21`;
