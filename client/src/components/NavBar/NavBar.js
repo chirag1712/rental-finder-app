@@ -1,5 +1,6 @@
 import { NavLink, useHistory } from 'react-router-dom';
 import { useAuth } from '../../useAuth';
+import './NavBar.css';
 
 function AuthButton() {
     const history = useHistory();
@@ -14,7 +15,7 @@ function AuthButton() {
 function NavBar() {
     const auth = useAuth();
     return (
-        <div>
+        <div class="navbar">
             <div>
                 <NavLink to="/postings" activeClassName="activeNavLink">
                     Browse Postings
