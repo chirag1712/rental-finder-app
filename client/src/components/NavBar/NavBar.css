@@ -3,7 +3,7 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    background-color: orange;
+    background-color: lightgrey;
 }
 button, a {
   font: bold 18px Arial;
