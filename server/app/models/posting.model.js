@@ -119,6 +119,20 @@ Posting.getPostings = filterInfo => {
     })
 };
 
+Posting.updatePopularity = id => {
+
+    const query = `UPDATE Posting
+                    SET pop = pop + 1
+                    WHERE posting_id = ${id}`
+
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+};
+
 Posting.create = newPosting => {
     return new Promise((resolve, reject) => {
         sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
