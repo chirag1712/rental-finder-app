@@ -14,6 +14,7 @@ app.get("/", (_, res) => {
 app.use("/api/users", require("./app/routes/user.routes.js"));
 app.use("/api/postings", require("./app/routes/posting.routes.js"));
 app.use("/api/photos", require("./app/routes/photo.routes.js"));
+app.use("/api/address", require("./app/routes/address.routes.js"));
 
 // listening for requests
 const PORT = process.env.PORT || 5000;

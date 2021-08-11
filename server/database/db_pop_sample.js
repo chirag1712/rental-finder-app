@@ -1,4 +1,5 @@
-const { sql, getPostalCodeAPI } = require('./db_fill_missing_postal_codes.js');
+const { sql } = require('./db_fill_missing_postal_codes.js');
+const { getPostalCodeAPI } = require('../app/controllers/address.controller');
 const { createWriteStream, readdirSync, unlinkSync } = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');

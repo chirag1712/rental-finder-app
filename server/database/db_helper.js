@@ -38,6 +38,7 @@ exports.dump = (path, args = []) => {
 				`--user=${dbConfig.USER}`,
 				`--password=${dbConfig.PASSWORD}`,
 				dbConfig.DB,
+                '--set-gtid-purged=OFF',
 				...args
 			]
 		);

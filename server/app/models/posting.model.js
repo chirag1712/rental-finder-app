@@ -151,6 +151,20 @@ Address.search = address => {
     });
 };
 
+Address.searchWithoutPostalCode = address => {
+    return new Promise((resolve, reject) => {
+        var query = "SELECT * FROM Address WHERE lower(city) = ? AND lower(street_name) = ? AND street_num = ?";
+        sql.query(query, [address.city.toLowerCase(), address.street_name.toLowerCase(), address.street_num.toLowerCase()], (err, res) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        }
+        );
+    });
+};
+
 Address.create = newAddress => {
     return new Promise((resolve, reject) => {
         sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
