@@ -40,7 +40,7 @@ Posting.userCheck = userId => {
         sql.query(
             "SELECT * FROM User WHERE user_id = ?", userId, (err, res) => {
                 if (err) {
-                    // console.log("error: ", err);
+                    console.log("error: ", err);
                     reject(err);
                 } else {
                     resolve(res[0]);
@@ -109,7 +109,7 @@ Posting.getPostings = filterInfo => {
 		ORDER BY ${sortStatement}
 		LIMIT ${page * 20}, 21`;
 
-    // console.log(query)
+    console.log(query)
 
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
@@ -123,11 +123,11 @@ Posting.create = newPosting => {
     return new Promise((resolve, reject) => {
         sql.query("INSERT INTO Posting SET ?", newPosting, (err, res) => {
             if (err) {
-                // console.log("error: ", err);
+                console.log("error: ", err);
                 reject(err)
             } else {
                 const createdPosting = { posting_id: res.insertId, ...newPosting }
-                // console.log("created posting: ", createdPosting);
+                console.log("created posting: ", createdPosting);
                 resolve(createdPosting);
             }
         });
@@ -140,10 +140,10 @@ Address.search = address => {
         var query = "SELECT * FROM Address WHERE street_num = ? AND postal_code = ?";
         sql.query(query, [address.street_num, address.postal_code], (err, res) => {
             if (err) {
-                // console.log("error: ", err);
+                console.log("error: ", err);
                 reject(err);
             } else {
-                // console.log("address from db: ", res);
+                console.log("address from db: ", res);
                 resolve(res);
             }
         }
@@ -155,11 +155,11 @@ Address.create = newAddress => {
     return new Promise((resolve, reject) => {
         sql.query("INSERT INTO Address SET ?", newAddress, (err, res) => {
             if (err) {
-                // console.log("error: ", err);
+                console.log("error: ", err);
                 reject(err);
             } else {
                 const createdAddress = { address_id: res.insertId, ...newAddress };
-                // console.log("created address: ", createdAddress);
+                console.log("created address: ", createdAddress);
                 resolve(createdAddress);
             }
         });
@@ -170,11 +170,11 @@ AddressOf.create = newAddressOf => {
     return new Promise((resolve, reject) => {
         sql.query("INSERT INTO AddressOf SET ?", newAddressOf, (err, res) => {
             if (err) {
-                // console.log("error: ", err);
+                console.log("error: ", err);
                 reject(err);
             }
 
-            // console.log("created new addressof translation: ", newAddressOf);
+            console.log("created new addressof translation: ", newAddressOf);
             resolve(newAddressOf)
         });
     });
