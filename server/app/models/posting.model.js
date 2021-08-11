@@ -38,7 +38,7 @@ const AddressOf = function (addressof) {
 Posting.userCheck = userId => {
     return new Promise((resolve, reject) => {
         sql.query(
-            "SELECT * FROM User WHERE user_id = ?", userId, (err, res) => {
+            "SELECT * FROM User WHERE user_id = ?", [userId], (err, res) => {
                 if (err) {
                     // console.log("error: ", err);
                     reject(err);

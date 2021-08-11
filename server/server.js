@@ -1,9 +1,14 @@
 const express = require('express');
+const multer = require('multer');
+const upload = multer();
 
 const app = express();
 
 //body parser
 app.use(express.json({ extended: false }));
+// for parsing multipart/form-data
+app.use(upload.array()); 
+app.use(express.static('public'));
 
 // simple route
 app.get("/", (_, res) => {

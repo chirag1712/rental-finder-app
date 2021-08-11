@@ -53,9 +53,10 @@ const create = async (request, response) => {
 
     try {
         // validate that user exists in the db
+        console.log(request.body);
         const user = await Posting.userCheck(request.body.user_id)
         if (!user) {
-            return response.status(400).json({ error: "User doesn't exist." });
+            return response.status(404).json({ error: "User doesn't exist." });
         }
 
         // Save Posting in the database
