@@ -22,7 +22,7 @@ const ShowSinglePosting = () => {
             .catch(error => console.error(`Error: ${error}`));
     }
 
-    const getImages = () => {
+    const getUserInfo = () => {
         axios.get('/api/users/user/' + info.user_id)
         .then(response => {
                 setUserInfo(response.data);
@@ -31,7 +31,6 @@ const ShowSinglePosting = () => {
     }
 
     const getListImages = () => {
-        getImages();
         const images = [];
         if (info.photo_urls != null) {
             for (let i = 0; i < info.photo_urls.length; ++i) {
@@ -51,6 +50,10 @@ const ShowSinglePosting = () => {
     useEffect(() => {
         getInfo();
     }, []);
+
+    useEffect(() => {
+        getUserInfo();
+    }, [info]);
 
     const getDate = (date) => {
         if (date) {
