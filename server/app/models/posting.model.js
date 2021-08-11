@@ -128,9 +128,7 @@ Posting.updatePopularity = id => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             if (err) reject(err);
-            else {
-                resolve()
-            };
+            else resolve();
         });
     });
 };
