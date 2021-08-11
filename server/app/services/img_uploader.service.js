@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const util = require("util");
 
 // file type filtering based on extension and mimetype
 const imageTypeFilter = function (request, file, callback) {
@@ -27,20 +28,4 @@ const obj = {
 // multer setup
 const upload = multer(obj).any("file");
 
-// image uploader with filetype validations
-const imgUploader = (request, response) => {
-    upload(request, response, (error) => {
-        if (error) {
-            return response.status(500).json({ success: false, code: error.code, message: error.message });
-        } else if (!request.files) {
-            return response.status(500).json('file not found');
-        } else {
-            response.status(200).json({
-                success: true,
-                message: 'Files uploaded successfully!'
-            });
-        }
-    });
-};
-
-module.exports = imgUploader;
+module.exports = upload;
