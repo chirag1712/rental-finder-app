@@ -1,6 +1,5 @@
 const multer = require("multer");
 const path = require("path");
-const util = require("util");
 
 // file type filtering based on extension and mimetype
 const imageTypeFilter = function (request, file, callback) {
