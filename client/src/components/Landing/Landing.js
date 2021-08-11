@@ -6,14 +6,15 @@ import logo from '../../images/HonkForSubletLogo.png'
 import Input from './Input.js'
 import { Wrapper, Header, GreenButton, BigLogo, Margin50, Margin100} from '../../styles/AppStyles.js';
 import { Dialog, WhiteBox} from './LandingStyles.js';
+import { useAuth } from '../../useAuth';
 
-const Landing = ({ setUserId }) => {
+const Landing = () => {
     const history = useHistory();
+    const auth = useAuth();
 
     useEffect(() => {
-        const user = localStorage.getItem("user");
-        if (user) {
-            // if user is logged in then direct them to createPosting
+        if (auth.user) {
+            // if user is logged in then direct them to /Posting
             history.push("/Postings")
         }
     });
@@ -54,9 +55,7 @@ const Landing = ({ setUserId }) => {
 
         try {
             const response = await axios.post('api/users/signup', data);
-            // console.log(response);
-            setUserId(response.data.id);
-            localStorage.setItem('user', JSON.stringify(response.data));
+            await auth.signIn(userInfo.email, userInfo.password);
             history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);
@@ -77,16 +76,8 @@ const Landing = ({ setUserId }) => {
             return;
         }
 
-        const data = {
-            email: userInfo.email,
-            password: userInfo.password
-        };
-
         try {
-            const response = await axios.post('api/users/login', data);
-            // console.log(response);
-            setUserId(response.data.id);
-            localStorage.setItem('user', JSON.stringify(response.data));
+            await auth.signIn(userInfo.email, userInfo.password);
             history.push("/Postings");
         } catch (err) {
             setError(err.response.data.error);

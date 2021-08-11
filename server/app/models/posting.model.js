@@ -38,7 +38,7 @@ const AddressOf = function (addressof) {
 Posting.userCheck = userId => {
     return new Promise((resolve, reject) => {
         sql.query(
-            "SELECT * FROM User WHERE user_id = ?", userId, (err, res) => {
+            "SELECT * FROM User WHERE user_id = ?", [userId], (err, res) => {
                 if (err) {
                     console.log("error: ", err);
                     reject(err);
@@ -158,6 +158,20 @@ Address.search = address => {
                 reject(err);
             } else {
                 console.log("address from db: ", res);
+                resolve(res);
+            }
+        }
+        );
+    });
+};
+
+Address.searchWithoutPostalCode = address => {
+    return new Promise((resolve, reject) => {
+        var query = "SELECT * FROM Address WHERE lower(city) = ? AND lower(street_name) = ? AND street_num = ?";
+        sql.query(query, [address.city.toLowerCase(), address.street_name.toLowerCase(), address.street_num.toLowerCase()], (err, res) => {
+            if (err) {
+                reject(err);
+            } else {
                 resolve(res);
             }
         }
