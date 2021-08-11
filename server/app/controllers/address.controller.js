@@ -44,7 +44,6 @@ async function lookupAddress(request, response) {
     const { city, street_name, street_num } = request.params;
     try {
         const existingAddress = await Address.searchWithoutPostalCode({ city, street_name, street_num });
-        console.log(existingAddress);
         if (existingAddress[0]) { // check for existing address in database
             return response.status(200).json(existingAddress[0]);
         }
