@@ -148,10 +148,9 @@ const showPosting = async (request, response) => {
     }
 
     try {
-        // TODO: also need to increment popularity for the posting 
-        // (only if the user trying to get it is not the posting creator)
         const posting = await Posting.getSinglePosting(id);
         posting.photo_urls = await Photo.getUrlsForPosting(posting.posting_id);
+        await Posting.updatePopularity(id)
         response.status(200).json(posting);
     } catch (err) {
         return response.status(500).send({ error: 'Internal server Error' })
