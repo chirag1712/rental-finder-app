@@ -101,7 +101,8 @@ const getUser = async (request, response) => {
 
 	try {
 		const user = await User.getById(id);
-		response.status(200).json({
+        if (!user) return response.status(401).json({ error: "User does not exist" });
+		return response.status(200).json({
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email

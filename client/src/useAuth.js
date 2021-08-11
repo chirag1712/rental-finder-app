@@ -7,9 +7,18 @@ import axios from 'axios';
 function useProvideAuth() {
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        if (localStorage.getItem('user') !== null) {
-            setUser(JSON.parse(localStorage.getItem('user')));
+    useEffect(async () => {
+        if (localStorage.getItem('user')) {
+            const localUser = JSON.parse(localStorage.getItem('user'));
+            try {
+                await axios.get(`api/users/user/${localUser.id}`);
+                setUser(localUser);
+            } catch (err) {
+                console.error(err);
+                if (err.response && err.response.status === 401) {
+                    localStorage.removeItem('user');
+                }
+            }
         }
     }, []);
 
