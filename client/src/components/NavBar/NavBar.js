@@ -15,7 +15,7 @@ function AuthButton() {
 function NavBar() {
     const auth = useAuth();
     return (
-        <div class="navbar">
+        <div className="navbar">
             <div>
                 <NavLink to="/postings" activeClassName="activeNavLink">
                     Browse Postings

@@ -4,6 +4,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: lightgrey;
+    height: 5vh;
 }
 button, a {
   font: bold 18px Arial;

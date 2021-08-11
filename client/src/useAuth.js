@@ -11,7 +11,7 @@ function useProvideAuth() {
         if (localStorage.getItem('user') !== null) {
             setUser(JSON.parse(localStorage.getItem('user')));
         }
-    });
+    }, []);
 
     const signIn = (email, password) => new Promise(async (resolve, reject) => {
         try {

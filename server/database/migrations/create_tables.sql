@@ -46,7 +46,9 @@ CREATE TABLE Address(
   street_name VARCHAR(20) NOT NULL,
   street_num VARCHAR(20) NOT NULL,
   postal_code CHAR(6) NOT NULL,
-  building_name VARCHAR(20)
+  building_name VARCHAR(20),
+  UNIQUE(city, street_name, street_num),
+  UNIQUE(street_num, postal_code)
 );
 
 CREATE TABLE AddressOf(

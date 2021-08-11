@@ -3,7 +3,7 @@ import bg from '../images/bg.jpg'
 
 export const AppDiv = styled.div`
   text-align: center;
-  height: 100vh;
+  height: 95vh;
 `;
 
 export const Wrapper = styled.div`
