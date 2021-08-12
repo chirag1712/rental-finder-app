@@ -32,7 +32,7 @@ const createPostingValidation = [
 	.custom((value, {req}) => req.body.total_rooms == null || req.body.total_rooms > 0),
 
 	check("rooms_available", "Available rooms incorrect")
-	.custom((value, {req}) => req.body.rooms_available == null || (req.body.total_rooms > 0 && (req.body.total_rooms == null || req.body.total_rooms >= req.body.rooms_available ))),
+	.custom((value, {req}) => req.body.rooms_available == null || (req.body.rooms_available > 0 && (req.body.total_rooms == null || req.body.total_rooms >= req.body.rooms_available ))),
 	
 	check("washrooms", "Washrooms should be positive")
 	.custom((value, {req}) => req.body.washrooms == null || req.body.washrooms > 0),
