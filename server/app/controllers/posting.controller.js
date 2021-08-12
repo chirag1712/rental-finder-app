@@ -6,6 +6,38 @@ const uploadToS3 = require("../models/s3.js");
 //express validator
 const { check, validationResult } = require("express-validator");
 
+const createPostingValidation = [
+	check("user_id", "User ID Is Required").not().isEmpty(),
+	check("user_id", "User ID should be an Int").isInt(),
+  
+	check("term", "Term Is Required").not().isEmpty(),
+	check("term", "Term should be Alphabets only").isAlpha(),
+	
+	check("start_date", "Start date is required").not().isEmpty(),
+	check("start_date", "Start date is a date").isDate(),
+  
+	check("end_date", "End date is required").not().isEmpty(),
+	check("end_date", "End date is a date").isDate(),
+
+	check("start_date", "Start date should be after the present date").isAfter(),
+	check("end_date", "End date should be after the present date").isAfter(),
+  
+	check("price_per_month", "Price per month is required").not().isEmpty(),
+	check("price_per_month", "Price per month should be positive").isInt({ min : 0}),
+  
+	check("gender_details", "Gender details are Required").not().isEmpty(),
+	check("gender_details", "Gender details should be ASCII chars only").isAscii(),
+
+	check("total_rooms", "Total rooms should be positive")
+	.custom((value, {req}) => req.body.total_rooms == null || req.body.total_rooms > 0),
+
+	check("rooms_available", "Available rooms incorrect")
+	.custom((value, {req}) => req.body.rooms_available == null || (req.body.total_rooms > 0 && (req.body.total_rooms == null || req.body.total_rooms >= req.body.rooms_available ))),
+	
+	check("washrooms", "Washrooms should be positive")
+	.custom((value, {req}) => req.body.washrooms == null || req.body.washrooms > 0),
+];
+
 const format = str => {
     if ('true' === str) return true
     if ('false' === str) return false
@@ -15,10 +47,10 @@ const format = str => {
 // Create a new posting
 const create = async (request, response) => {
     // Validate request
-    if (!request.body) {
-        return response.status(400).send({
-            message: "Content can not be empty!",
-        });
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        let errorArray = errors.array().map(e => e.msg);
+        return response.status(400).json({ error: errorArray[0] });
     }
 
     // Create a Posting
@@ -57,6 +89,12 @@ const create = async (request, response) => {
         const user = await Posting.userCheck(request.body.user_id)
         if (!user) {
             return response.status(404).json({ error: "User doesn't exist." });
+        }
+
+		//validate user does not have 3 postings already
+		const totalPostings = await Posting.totalPostingCheck(request.body.user_id)
+        if (totalPostings >= 3 ) {
+            return response.status(400).json({ error: "User already has 3 postings." });
         }
 
         // Save Posting in the database
@@ -160,6 +198,7 @@ const showPosting = async (request, response) => {
 module.exports = {
     create,
     indexPostingsValidation,
+	createPostingValidation,
     indexPostings,
     showPosting
 }

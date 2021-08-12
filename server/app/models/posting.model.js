@@ -49,6 +49,21 @@ Posting.userCheck = userId => {
     });
 }
 
+//check if user_id exists in database
+Posting.totalPostingCheck = userId => {
+    return new Promise((resolve, reject) => {
+        sql.query(
+            "SELECT * FROM Posting WHERE user_id = ?", [userId], (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                    reject(err);
+                } else {
+                    resolve(res.length);
+                }
+            });
+    });
+}
+
 Posting.getSinglePosting = id => {
     const query = `SELECT p.*, a.*
     FROM Posting AS p

@@ -7,7 +7,7 @@ const upload = require('../services/img_uploader.service.js');
 router.post('/index', posting.indexPostingsValidation, posting.indexPostings)
 
 // create a new Posting
-router.post("/create", (request, response) => {
+router.post("/create", posting.createPostingValidation, (request, response) => {
     upload(request, response, (error) => {
         if (error) {
             return response.status(500).json({ success: false, code: error.code, message: error.message });
