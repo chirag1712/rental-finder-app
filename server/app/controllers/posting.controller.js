@@ -31,7 +31,7 @@ const createPostingValidation = [
 	check("total_rooms", "Total rooms should be positive")
 	.custom((value, {req}) => req.body.total_rooms == null || req.body.total_rooms > 0),
 
-	check("rooms_available", "Available rooms incorrect")
+	check("rooms_available", "Available rooms should be positive and be less than total rooms")
 	.custom((value, {req}) => req.body.rooms_available == null || (req.body.rooms_available > 0 && (req.body.total_rooms == null || req.body.total_rooms >= req.body.rooms_available ))),
 	
 	check("washrooms", "Washrooms should be positive")
