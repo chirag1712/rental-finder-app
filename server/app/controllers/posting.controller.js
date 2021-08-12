@@ -22,7 +22,7 @@ const createPostingValidation = [
 	check("price_per_month", "Price per month is required").not().isEmpty(),
 	check("price_per_month", "Price per month should be positive").isInt({ min : 0}),
   
-	check("gender_details", "Gender details are Required").if().not().isEmpty(),
+	check("gender_details", "Gender details are Required").not().isEmpty(),
 	check("gender_details", "Gender details should be ASCII chars only").isAscii(),
 	  
 	// check("total_rooms", "Total rooms is required").not().isEmpty(),
