@@ -6,6 +6,46 @@ const uploadToS3 = require("../models/s3.js");
 //express validator
 const { check, validationResult } = require("express-validator");
 
+const createPostingValidation = [
+	check("user_id", "User ID Is Required").not().isEmpty(),
+	check("user_id", "User ID should be an Int").isInt(),
+  
+	check("term", "Term Is Required").not().isEmpty(),
+	check("term", "Term should be Alphabets only").isAlpha(),
+	
+	check("start_date", "Start date is required").not().isEmpty(),
+	check("start_date", "Start date is a date").isDate(),
+  
+	check("end_date", "End date is required").not().isEmpty(),
+	check("end_date", "End date is a date").isDate(),
+  
+	check("price_per_month", "Price per month is required").not().isEmpty(),
+	check("price_per_month", "Price per month should be positive").isInt({ min : 0}),
+  
+	check("gender_details", "Gender details are Required").if().not().isEmpty(),
+	check("gender_details", "Gender details should be ASCII chars only").isAscii(),
+	  
+	// check("total_rooms", "Total rooms is required").not().isEmpty(),
+	check("total_rooms", "Total rooms should be positive").isInt({ min : 0}),
+
+	// check("rooms_available", "Rooms available is required").not().isEmpty(),
+	check("rooms_available", "Rooms available should be positive").isInt({ min : 0}),
+	check("rooms_available", "Rooms available should be less than equal to total rooms").isInt({max : total_rooms}),
+	
+	// check("washrooms", "Washrooms is required").not().isEmpty(),
+	check("washrooms", "Washrooms should be positive").isInt({ min : 0}),
+  
+	// check("laundry", "Laundry is Required").not().isEmpty(),
+	check("laundry", "Laundry should be Alphabets only").isAlpha(),
+  
+	// check("description", "Description is Required").not().isEmpty(),
+	
+	check("created_at", "Created at is Required").not().isEmpty(),
+  
+	check("updated_at", "Updated at is Required").not().isEmpty(),
+  ];
+
+
 const format = str => {
     if ('true' === str) return true
     if ('false' === str) return false
@@ -58,6 +98,9 @@ const create = async (request, response) => {
         if (!user) {
             return response.status(404).json({ error: "User doesn't exist." });
         }
+
+		//check if 3 postings already
+
 
         // Save Posting in the database
         const newPosting = await Posting.create(posting);
@@ -160,6 +203,7 @@ const showPosting = async (request, response) => {
 
 module.exports = {
     create,
+	createPostingValidation,
     indexPostingsValidation,
     indexPostings,
     showPosting
