@@ -34,7 +34,7 @@ const AddressOf = function (addressof) {
     this.address_id = addressof.address_id;
 };
 
-//check if user_id exists in database
+// check if user_id exists in database
 Posting.userCheck = userId => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -49,7 +49,7 @@ Posting.userCheck = userId => {
     });
 }
 
-//check if user_id exists in database
+// check if user_id exists in database
 Posting.totalPostingCheck = userId => {
     return new Promise((resolve, reject) => {
         sql.query(
