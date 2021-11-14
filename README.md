@@ -1,5 +1,14 @@
+# HonkForSublet - Rental Finder App
+This proejct is a sublet finder application where tenants and potential subtenants can easily find each other through user friendly filters to find their perfect match! The targetted users of our application are students in the KW region who attend the University of Waterloo and Wilfrid Laurier University. Users will be able to create their own accounts to upload postings, view postings, as well as search by keywords, filter by term, rooms, and gender to sort through available sublets that are currently in the system!
+# Supported Functionality
+1. Secure Login/Signup flow using state-of-hart salting and hashing using `bcrypt`
+2. Creating multimedia postings for authorized users
+3. Index postings with intuitive filtering and sorting capibilities
+4. Index postings with complete sentence searches based on score based text matching
+5. Show information for a single posting and supporting images for user postings using AWS S3
+
 # Sample dataset for the App
-This script will scrape all the paginated postings from https://bamboohousing.ca using https://canadapostalcode.net/ for postal code validation and https://randomuser.me/ for fake user generation.
+We support scraping of all the paginated postings from https://bamboohousing.ca using https://canadapostalcode.net/ for postal code validation and https://randomuser.me/ for user generation.
 
 Here are some statistics about the dataset:
   * There are a total of ~100 postings scraped from www.bamboohousing.ca
@@ -8,13 +17,6 @@ Here are some statistics about the dataset:
 
 ### Instructions for loading the sample dataset:
 With a fresh db instance (detailed instructions below), you can use the `npm run db_pop_sample.js` script to scrape the real sublet posting data (as desribed in the report).
-# Supported Functionality
-1. Secure Login/Signup flow using state-of-hart salting and hashing using `bcrypt`
-2. Creating multimedia postings for authorized users
-3. Index postings with intuitive filtering and sorting capibilities
-4. Index postings with complete sentence searches based on score based text matching
-5. Show information for a single posting and supporting images for user postings using AWS S3
-
 ### Backend endpoints can be found in these files:
 1. `./server/app/controllers/user.controller.js`
 2. `./server/app/controllers/posting.controller.js`
@@ -41,7 +43,7 @@ With a fresh db instance (detailed instructions below), you can use the `npm run
   ```
 3. Use `server/.sample-env` file as a template to create your own `server/.env` file
 4. Install dependencies by running the following in the project root: `cd server && npm i` and `cd client && npm i`
-5. Setting up the db -`cd server` and you can set up your local database in 2 ways:
+5. Setting up the db - `cd server` and you can set up your local database in 2 ways:
   - FYI: to point to the local mysql db you need to set `NODE_ENV` to `dev` and to point to RDS just set it to `prod` in the `server/.env` (`NODE_ENV=dev` or `NODE_ENV=prod` in your `server/.env`)
 ### Option I. Sync with production database in RDS (WILL OVERWRITE DATA)
 1. Set database credentials in `.env` to point to RDS instance
