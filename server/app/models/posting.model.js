@@ -34,7 +34,7 @@ const AddressOf = function (addressof) {
     this.address_id = addressof.address_id;
 };
 
-//check if user_id exists in database
+// check if user_id exists in database
 Posting.userCheck = userId => {
     return new Promise((resolve, reject) => {
         sql.query(
@@ -44,6 +44,21 @@ Posting.userCheck = userId => {
                     reject(err);
                 } else {
                     resolve(res[0]);
+                }
+            });
+    });
+}
+
+// check if user_id exists in database
+Posting.totalPostingCheck = userId => {
+    return new Promise((resolve, reject) => {
+        sql.query(
+            "SELECT * FROM Posting WHERE user_id = ?", [userId], (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                    reject(err);
+                } else {
+                    resolve(res.length);
                 }
             });
     });

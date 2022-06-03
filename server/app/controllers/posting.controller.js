@@ -3,7 +3,7 @@ const { Posting, Address, AddressOf } = require("../models/posting.model.js");
 const Photo = require("../models/photo.model.js");
 const uploadToS3 = require("../models/s3.js");
 
-//express validator
+// Express validator
 const { check, validationResult } = require("express-validator");
 
 const format = str => {
@@ -15,10 +15,10 @@ const format = str => {
 // Create a new posting
 const create = async (request, response) => {
     // Validate request
-    if (!request.body) {
-        return response.status(400).send({
-            message: "Content can not be empty!",
-        });
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        let errorArray = errors.array().map(e => e.msg);
+        return response.status(400).json({ error: errorArray[0] });
     }
 
     // Create a Posting
@@ -57,6 +57,12 @@ const create = async (request, response) => {
         const user = await Posting.userCheck(request.body.user_id)
         if (!user) {
             return response.status(404).json({ error: "User doesn't exist." });
+        }
+
+		// Validate user does not have 3 postings already
+		const totalPostings = await Posting.totalPostingCheck(request.body.user_id)
+        if (totalPostings >= 3 ) {
+            return response.status(400).json({ error: "User already has 3 postings." });
         }
 
         // Save Posting in the database
